@@ -1,0 +1,24 @@
+name: Generate
+on:
+  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  schedule:
+    - cron:  '0 0 * * *'
+jobs:
+  census:
+    name: Census
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install Dependencies
+        run: sudo apt-get install python3-setuptools && python3 -m pip install -r requirements.txt
+      - name: Create output directory
+        run: mkdir out
+      - name: Build
+        run: ./census-exporter.py out/gluon-census.prom
+      - name: Archive output
+        uses: actions/upload-artifact@v1
+        with:
+          name: census-output
+          path: out
