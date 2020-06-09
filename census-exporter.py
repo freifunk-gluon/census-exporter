@@ -14,8 +14,8 @@ from prometheus_client import CollectorRegistry, Gauge, write_to_textfile
 
 log = structlog.get_logger()
 
-version_pattern = re.compile(r"^(?P<version>gluon-v\d{4}.\d(?:.\d)?(?:-\d+)?).*")
-base_pattern = re.compile(r"^(?P<base>gluon-v\d{4}.\d(?:.\d)?).*")
+version_pattern = re.compile(r"^(?P<version>gluon-v\d{4}\.\d(?:\.\d)?(?:-\d+)?).*")
+base_pattern = re.compile(r"^(?P<base>gluon-v\d{4}\.\d(?:\.\d)?).*")
 seen = set()
 duplicates = 0
 
