@@ -63,6 +63,7 @@
 "Leverkusen": ["https://map.fflev.de/data/meshviewer.json"],
 "Lübeck": ["https://map.luebeck.freifunk.net/data/nodes.json"],
 "Lüneburg": ["http://gw4.freifunk-lueneburg.de/meshviewer/data/meshviewer.json"],
+"Malmö": ["http://gateway-01.mesh.pjodd.se/hopglass/nodes.json"],
 "Mainz/Wiebsaden": ["https://map.freifunk-mwu.de/data/meshviewer.json"],
 "München": ["https://map.ffmuc.net/data/meshviewer.json"],
 "Münsterland": ["https://karte.freifunk-muensterland.de/data/nodes.json"],
