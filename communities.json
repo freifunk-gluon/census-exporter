@@ -87,7 +87,7 @@
 "Ruhrgebiet": ["https://map.freifunk.ruhr/data/rgw/meshviewer.json"],
 "Südholstein": ["https://map.freifunk-suedholstein.de/data/meshviewer.json"],
 "Südpfalz": ["https://new.freifunk-suedpfalz.de/netzausbau/data/meshviewer.json"],
-"Stuttgart": ["https://map02.freifunk-stuttgart.de/data/meshviewer.json"],
+"Stuttgart": ["https://map.freifunk-stuttgart.de/data/meshviewer.json"],
 "Trier": ["http://maps.tackin.de/data/meshviewer.json"],
 "Troisdorr": ["https://map.freifunk-troisdorf.de/data/tdf4/meshviewer.json",
 	      "https://map.freifunk-troisdorf.de/data/tdf5/meshviewer.json",
