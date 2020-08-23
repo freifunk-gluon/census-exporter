@@ -66,6 +66,7 @@
 "Malmö": ["http://gateway-01.mesh.pjodd.se/hopglass/nodes.json"],
 "Mainz/Wiebsaden": ["https://map.freifunk-mwu.de/data/meshviewer.json"],
 "München": ["https://map.ffmuc.net/data/meshviewer.json"],
+"Mayen-Koblenz": ["https://map.freifunk-myk.de/data/meshviewer.json"],
 "Münsterland": ["https://karte.freifunk-muensterland.de/data/nodes.json"],
 "Niersurfer": ["https://map.freifunk-niersufer.de/data/meshviewer.json"],
 "Nord": ["https://mesh.freifunknord.de/data/v2/meshviewer.json"],
