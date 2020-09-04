@@ -6,6 +6,7 @@
 "Darmstadt": ["https://meshviewer.darmstadt.freifunk.net/data/meshviewer.json"],
 "Dreiländereck": ["https://map.freifunk-3laendereck.net/data/meshviewer.json"],
 "Dresden": ["https://meshviewer.freifunk-dresden.de/data/nodes.json"],
+"Düsseldorf": ["https://map.freifunk-duesseldorf.de/data/meshviewer.json"],
 "Eulenfunk": ["https://karte.ffdus.de/data/nodes.json",
               "https://mk.map.eulenfunk.de/data/nodes.json",
               "https://freudenberg.map.eulenfunk.de/data/nodes.json",
