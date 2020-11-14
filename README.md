@@ -10,6 +10,8 @@ This file tracks the communities and their metadata URLs. Multiple URLs can be g
 
 ## How does it look?
 
-![Gluon base version distribution](https://stats.darmstadt.freifunk.net/render/d-solo/CA5PRFmMz/gluon-census?orgId=1&panelId=10&width=1000&height=500)
+![Gluon base version distribution](images/base_version.png)
+
+![Gluon communities rollout for v2020.1.x](images/communities_v2020.2.1.png)
 
 The full Grafana dashboard can be found over at https://stats.darmstadt.freifunk.net/d/CA5PRFmMz/gluon-census.
