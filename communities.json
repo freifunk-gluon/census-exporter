@@ -24,56 +24,63 @@
     "https://map.freifunk-duesseldorf.de/data/meshviewer.json"
   ],
   "Eulenfunk": [
-    "https://karte.ffdus.de/data/nodes.json",
-    "https://mk.map.eulenfunk.de/data/nodes.json",
-    "https://freudenberg.map.eulenfunk.de/data/nodes.json",
-    "https://hilchenbach.map.eulenfunk.de/data/nodes.json",
-    "https://siegen.map.eulenfunk.de/data/nodes.json",
+    "https://olddus.map.ffdus.de/data/nodes.json",
+    "https://dusuk12.map.ffdus.de/data/nodes.json",
+    "https://dusfl13.map.ffdus.de/data/nodes.json",
+    "https://wupbar14.karte.neanderfunk.de/data/nodes.json",
+    "https://mrh15.karte.neanderfunk.de/data/nodes.json",
+    "https://gmb16.karte.neanderfunk.de/data/nodes.json",
+    "https://wip17.karte.neanderfunk.de/data/nodes.json",
     "https://map-altena.freifunk-mk.de/data/nodes.json",
     "https://map-hemer.freifunk-mk.de/data/nodes.json",
     "https://map.freifunk-iserlohn.de/data/nodes.json",
     "https://map-luedenscheid.freifunk-mk.de/data/nodes.json",
+    "https://mk.map.eulenfunk.de/data/nodes.json",
     "https://map-neuenrade.freifunk-mk.de/data/nodes.json",
     "https://map-meinerzhagen.freifunk-mk.de/data/nodes.json",
     "https://bgl.map.ffgl.eu/data/nodes.json",
     "https://lln.map.ffgl.eu/data/nodes.json",
     "https://ode.map.ffgl.eu/data/nodes.json",
     "https://bcd.map.ffgl.eu/data/nodes.json",
-    "https://rrh.map.ffgl.eu/data/nodes.json",
-    "https://han.karte.neanderfunk.de/data/nodes.json",
-    "https://hlg.karte.neanderfunk.de/data/nodes.json",
-    "https://hld.karte.neanderfunk.de/data/nodes.json",
-    "https://lgf.karte.neanderfunk.de/data/nodes.json",
-    "https://met.karte.neanderfunk.de/data/nodes.json",
-    "https://mon.karte.neanderfunk.de/data/nodes.json",
-    "https://erk.karte.neanderfunk.de/data/nodes.json",
-    "https://rat.karte.neanderfunk.de/data/nodes.json",
-    "https://vel.karte.neanderfunk.de/data/nodes.json",
-    "https://wlf.karte.neanderfunk.de/data/nodes.json"
+    "https://nef06han.karte.neanderfunk.de/data/nodes.json",
+    "https://nef08hlg.karte.neanderfunk.de/data/nodes.json",
+    "https://nef04hld.karte.neanderfunk.de/data/nodes.json",
+    "https://nef09lgf.karte.neanderfunk.de/data/nodes.json",
+    "https://nef02met.karte.neanderfunk.de/data/nodes.json",
+    "https://nef05mon.karte.neanderfunk.de/data/nodes.json",
+    "https://nef07erk.karte.neanderfunk.de/data/nodes.json",
+    "https://nef03rat.karte.neanderfunk.de/data/nodes.json",
+    "https://nef01vel.karte.neanderfunk.de/data/nodes.json",
+    "https://nef10wlf.karte.neanderfunk.de/data/nodes.json",
+    "https://nef11lvr.karte.neanderfunk.de/data/nodes.json",
+    "https://nef18uk.karte.neanderfunk.de/data/nodes.json",
+    "https://nef19agi.karte.neanderfunk.de/data/nodes.json",
+    "https://nef20grt.karte.neanderfunk.de/data/nodes.json",
+    "https://nef21gls.karte.neanderfunk.de/data/nodes.json",
+    "https://nef22png.karte.neanderfunk.de/data/nodes.json",
+    "https://nef23atk.karte.neanderfunk.de/data/nodes.json",
+    "https://nef24krv.karte.neanderfunk.de/data/nodes.json",
+    "https://nef25pss.karte.neanderfunk.de/data/nodes.json",
+    "https://nef26vts.karte.neanderfunk.de/data/nodes.json",
+    "https://nef27grd.karte.neanderfunk.de/data/nodes.json",
+    "https://nef28plt.karte.neanderfunk.de/data/nodes.json",
+    "https://nef29gvd.karte.neanderfunk.de/data/nodes.json",
+    "https://nef30ars.karte.neanderfunk.de/data/nodes.json",
+    "https://freudenberg.map.eulenfunk.de/data/nodes.json",
+    "https://hilchenbach.map.eulenfunk.de/data/nodes.json",
+    "https://siegen.map.eulenfunk.de/data/nodes.json"
   ],
   "Einbeck": [
     "http://vps643489.ovh.net/meshviewer/data/meshviewer.json"
   ],
   "Erfurt": [
-    "https://map.erfurt.freifunk.net/data/meshviewer.json"
+    "https://map.erfurt.freifunk.net/meshviewer/data/meshviewer.json"
   ],
   "Essen": [
     "https://map.freifunk-essen.de/data/meshviewer.json"
   ],
   "Ennepe-Ruhr": [
-    "https://map.ff-en.de/data/ept/meshviewer.json",
-    "https://map.ff-en.de/data/en/meshviewer.json",
-    "https://map.ff-en.de/data/ha/meshviewer.json",
-    "https://map.ff-en.de/data/hat/meshviewer.json",
-    "https://map.ff-en.de/data/spr/meshviewer.json",
-    "https://map.ff-en.de/data/wtt/meshviewer.json",
-    "https://map.ff-en.de/data/wit/meshviewer.json"
-  ],
-  "Frankenberg": [
-    "https://map.freifunk-fkb.de/data/fkb/meshviewer.json",
-    "https://map.freifunk-fkb.de/data/ebl/meshviewer.json",
-    "https://map.freifunk-fkb.de/data/kb/meshviewer.json",
-    "https://map.freifunk-fkb.de/data/bw/meshviewer.json"
+    "https://karte.ff-en.de/data/meshviewer.json"
   ],
   "Frankfurt": [
     "https://yanic.batman15.ffffm.net/meshviewer.json"
@@ -92,7 +99,11 @@
     "https://gg.indie-freifunk.net/data/meshviewer.json"
   ],
   "Gütersloh": [
-    "http://hopglass.4830.org/yanic/ffgt/meshviewer.json"
+    "https://newmap.4830.org/data/map_01/nodes.json",
+    "https://newmap.4830.org/data/map_02/nodes.json",
+    "https://newmap.4830.org/data/map_03/nodes.json",
+    "https://newmap.4830.org/data/map_04/nodes.json",
+    "https://newmap.4830.org/data/map_66/nodes.json"
   ],
   "Hamburg": [
     "https://hopglass-backend.hamburg.freifunk.net/nodes.json"
@@ -106,14 +117,11 @@
   "Karlsruhe": [
     "https://api.karlsruhe.freifunk.net/yanic/meshviewer/meshviewer.json"
   ],
-  "Kassel": [
-    "https://map.freifunk-kassel.de/data/nodes.json"
-  ],
   "Kiel": [
     "https://hopglass.freifunk.in-kiel.de/nodes.json"
   ],
   "Kitzingen": [
-    "https://map.freifunk-kitzingen.de/data/meshviewer.json"
+    "https://falterturm.freifunk-vec.de/meshviewer.json"
   ],
   "Königswinter": [
     "https://ffkwkarte.freifunk-koenigswinter.de/data/koenigswinter/meshviewer.json"
@@ -150,6 +158,9 @@
   ],
   "Nord": [
     "https://mesh.freifunknord.de/data/v2/meshviewer.json"
+  ],
+  "Nordhessen": [
+    "https://map.freifunk-nordhessen.de/data/meshviewer.json"
   ],
   "Nordwest": [
     "https://map.ffnw.de/data/meshviewer.json"
@@ -196,10 +207,8 @@
   "Trier": [
     "http://maps.tackin.de/data/meshviewer.json"
   ],
-  "Troisdorr": [
-    "https://map.freifunk-troisdorf.de/data/tdf4/meshviewer.json",
-    "https://map.freifunk-troisdorf.de/data/tdf5/meshviewer.json",
-    "https://map.freifunk-troisdorf.de/data/tdf6/meshviewer.json"
+  "Troisdorf": [
+    "https://map.freifunk-troisdorf.de/data/api/meshviewer.json"
   ],
   "Tuttlingen": [
     "https://map.freifunk-3laendereck.net/map-data/fftut/meshviewer.json"
@@ -209,9 +218,6 @@
   ],
   "Vogtland": [
     "https://mapdata.freifunk-vogtland.net/meshviewer.json"
-  ],
-  "Wels": [
-    "http://leto.wels.funkfeuer.at:8080/meshviewer/data/meshviewer.json"
   ],
   "Westpfalz": [
     "https://api.karlsruhe.freifunk.net/yanic/meshviewer/ffwp/meshviewer.json"
