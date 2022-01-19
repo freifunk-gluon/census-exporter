@@ -215,6 +215,9 @@
   "Tuttlingen": [
     "https://map.freifunk-3laendereck.net/map-data/fftut/meshviewer.json"
   ],
+  "Uelzen": [
+    "https://map.freifunk-uelzen.de/data/nodes.json"
+  ],
   "Ulm": [
     "https://map.freifunk-ulm.de/data/meshviewer.json"
   ],
