@@ -5,6 +5,9 @@
   "Altdorf": [
     "https://map.tecff.de/yanic/meshviewer.json"
   ],
+  "Bergstrasse": [
+    "https://karte.freifunk-bergstrasse.de/data/nodes.json"
+  ],
   "Braunschweig": [
     "https://freifunk-bs.de/output/nodes.json"
   ],
