@@ -1,24 +1,22 @@
 #!/usr/bin/env python3
 
 import json
-import click
 import re
+import sys
+from collections import defaultdict
+
+import click
 import requests
 import structlog
-from voluptuous import Schema, Invalid, MultipleInvalid
-from collections import defaultdict
-from functools import reduce
-from operator import getitem
 from prometheus_client import CollectorRegistry, Gauge, write_to_textfile
-
+from voluptuous import Invalid, MultipleInvalid, Schema
 
 log = structlog.get_logger()
 
-version_pattern = re.compile(r"^(?P<version>gluon-v\d{4}\.\d(?:\.\d)?(?:-\d+)?).*")
-base_pattern = re.compile(r"^(?P<base>gluon-v\d{4}\.\d(?:\.\d)?).*")
-seen = set()
-duplicates = 0
-
+VERSION_PATTERN = re.compile(r"^(?P<version>gluon-v\d{4}\.\d(?:\.\d)?(?:-\d+)?).*")
+BASE_PATTERN = re.compile(r"^(?P<base>gluon-v\d{4}\.\d(?:\.\d)?).*")
+SEEN = set()
+DUPLICATE = 0
 
 # minimal schema definitions to recognize formats
 SCHEMA_MESHVIEWER = Schema({"timestamp": str, "nodes": [dict], "links": [dict]})
@@ -34,72 +32,86 @@ SCHEMA_NODESJSONV2 = Schema({"timestamp": str, "version": 2, "nodes": [dict]})
 FORMATS = {}
 
 
-def normalize_model_name(name):
-    return re.sub(r"\s+", " ", name)
-
-
 def register_hook(name, schema, parser):
     FORMATS[name] = {"schema": schema, "parser": parser}
 
 
+def normalize_model_name(name):
+    return re.sub(r"\s+", " ", name)
+
+
+def already_seen(node_id):
+    global SEEN, DUPLICATE
+
+    if node_id in SEEN:
+        DUPLICATE += 1
+        return True
+
+    SEEN.add(node_id)
+
+    return False
+
+
 def parse_meshviewer(data):
-    global seen, duplicates
     bases = defaultdict(int)
     models = defaultdict(int)
+
     for node in data["nodes"]:
         try:
             node_id = node["node_id"]
-            if node_id in seen:
-                duplicates += 1
+
+            if already_seen(node_id):
                 continue
+
             base = node["firmware"]["base"]
-            seen.add(node_id)
-            match = version_pattern.match(base)
-            if match:
+            if match := VERSION_PATTERN.match(base):
                 bases[match.group("version")] += 1
+
             model = normalize_model_name(node["model"])
             models[model] += 1
-        except KeyError as ex:
+        except KeyError as _:
             continue
+
     return bases, models
 
 
-def parse_nodes_json_v1(data, *kwargs):
-    global seen, duplicates
+def parse_nodes_json_v1(data):
     bases = defaultdict(int)
+
     for node_id, node in data["nodes"].items():
-        if node_id in seen:
-            duplicates += 1
+        if already_seen(node_id):
             continue
+
         try:
             base = node["nodeinfo"]["software"]["firmware"]["base"]
-        except KeyError as ex:
+        except KeyError:
             continue
-        seen.add(node_id)
-        match = version_pattern.match(base)
-        if match:
+
+        if match := VERSION_PATTERN.match(base):
             bases[match.group("version")] += 1
-    return bases, dict()
+
+    return bases, {}
 
 
-def parse_nodes_json_v2(data, *kwargs):
-    global seen, duplicates
+def parse_nodes_json_v2(data):
+    global SEEN, DUPLICATE
     bases = defaultdict(int)
     models = defaultdict(int)
+
     for node in data["nodes"]:
         try:
             node_id = node["nodeinfo"]["node_id"]
-            if node_id in seen:
-                duplicates += 1
+
+            if already_seen(node_id):
                 continue
+
             base = node["nodeinfo"]["software"]["firmware"]["base"]
-            seen.add(node_id)
-            match = version_pattern.match(base)
-            if match:
+            if match := VERSION_PATTERN.match(base):
                 bases[match.group("version")] += 1
+
             model = normalize_model_name(node["nodeinfo"]["hardware"]["model"])
             models[model] += 1
-        except KeyError as ex:
+        except KeyError:
             continue
 
     return bases, models
@@ -122,7 +134,7 @@ def download(url, timeout=5):
         log.msg(
             "Unexpected HTTP status code", status_code=response.status_code, url=url
         )
-        raise ex
+        return None
 
     return response
 
@@ -141,9 +153,9 @@ def load(url):
     for name, format in FORMATS.items():
         try:
             format["schema"](data)
-            print(f"{name}\t{url}")
+            log.msg("Processing", format=name, url=url)
             return format["parser"](data)
-        except (Invalid, MultipleInvalid) as ex:
+        except (Invalid, MultipleInvalid):
             pass
 
     raise ValueError("No parser found")
@@ -174,26 +186,25 @@ def main(outfile):
             try:
                 versions, models = load(url)
             except KeyboardInterrupt:
-                import sys
-
                 sys.exit(1)
-            except BaseException as ex:
+            except BaseException:
                 continue
+
             for version, sum in versions.items():
-                match = base_pattern.match(version)
-                base = match.group("base")
-                metric_gluon_version_total.labels(
-                    community=community, version=version, base=base
-                ).set(sum)
+                if match := BASE_PATTERN.match(version):
+                    base = match.group("base")
+                    metric_gluon_version_total.labels(
+                        community=community, version=version, base=base
+                    ).set(sum)
+
             for model, sum in models.items():
-                metric_gluon_model_total.labels(
-                    community=community, model=model
-                ).set(sum)
+                metric_gluon_model_total.labels(community=community, model=model).set(
+                    sum
+                )
 
     write_to_textfile(outfile, registry)
 
-    print(len(seen), "unique nodes")
-    print(duplicates, "duplicates skipped")
+    log.msg("Summary", unique=len(SEEN), duplicate=DUPLICATE)
 
 
 if __name__ == "__main__":
