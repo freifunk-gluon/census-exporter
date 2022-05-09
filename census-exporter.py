@@ -31,29 +31,11 @@ SCHEMA_NODESJSONV1 = Schema({"timestamp": str, "version": 1, "nodes": dict})
 
 SCHEMA_NODESJSONV2 = Schema({"timestamp": str, "version": 2, "nodes": [dict]})
 
-
-def validate_macaddr(candidate):
-    blocks = candidate.split(":")
-
-    if len(blocks) != 6:
-        raise Invalid("Not a valid mac address")
-
-    try:
-        int("".join(blocks), 16)
-    except ValueError:
-        raise Invalid("Not a valid mac address")
-
-    return candidate
+FORMATS = {}
 
 
 def normalize_model_name(name):
     return re.sub(r"\s+", " ", name)
-
-
-SCHEMA_ALFRED = Schema({validate_macaddr: dict})
-
-
-FORMATS = {}
 
 
 def register_hook(name, schema, parser):
@@ -127,7 +109,6 @@ register_hook("meshviewer", SCHEMA_MESHVIEWER, parse_meshviewer)
 register_hook("meshviewer (old)", SCHEMA_MESHVIEWER_OLD, parse_meshviewer)
 register_hook("nodes.json v1", SCHEMA_NODESJSONV1, parse_nodes_json_v1)
 register_hook("nodes.json v2", SCHEMA_NODESJSONV2, parse_nodes_json_v2)
-# register_hook('alfred', SCHEMA_ALFRED, parse_alfred)
 
 
 def download(url, timeout=5):
