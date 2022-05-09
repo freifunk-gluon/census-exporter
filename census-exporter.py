@@ -46,6 +46,10 @@ def validate_macaddr(candidate):
     return candidate
 
 
+def normalize_model_name(name):
+    return re.sub(r"\s+", " ", name)
+
+
 SCHEMA_ALFRED = Schema({validate_macaddr: dict})
 
 
@@ -59,6 +63,7 @@ def register_hook(name, schema, parser):
 def parse_meshviewer(data):
     global seen, duplicates
     bases = defaultdict(int)
+    models = defaultdict(int)
     for node in data["nodes"]:
         try:
             node_id = node["node_id"]
@@ -70,9 +75,11 @@ def parse_meshviewer(data):
             match = version_pattern.match(base)
             if match:
                 bases[match.group("version")] += 1
+            model = normalize_model_name(node["model"])
+            models[model] += 1
         except KeyError as ex:
             continue
-    return bases
+    return bases, models
 
 
 def parse_nodes_json_v1(data, *kwargs):
@@ -90,12 +97,13 @@ def parse_nodes_json_v1(data, *kwargs):
         match = version_pattern.match(base)
         if match:
             bases[match.group("version")] += 1
-    return bases
+    return bases, dict()
 
 
 def parse_nodes_json_v2(data, *kwargs):
     global seen, duplicates
     bases = defaultdict(int)
+    models = defaultdict(int)
     for node in data["nodes"]:
         try:
             node_id = node["nodeinfo"]["node_id"]
@@ -107,10 +115,12 @@ def parse_nodes_json_v2(data, *kwargs):
             match = version_pattern.match(base)
             if match:
                 bases[match.group("version")] += 1
+            model = normalize_model_name(node["nodeinfo"]["hardware"]["model"])
+            models[model] += 1
         except KeyError as ex:
             continue
 
-    return bases
+    return bases, models
 
 
 register_hook("meshviewer", SCHEMA_MESHVIEWER, parse_meshviewer)
@@ -168,6 +178,12 @@ def main(outfile):
         ["community", "base", "version"],
         registry=registry,
     )
+    metric_gluon_model_total = Gauge(
+        "gluon_model_total",
+        "Number of unique nodes using a certain device model",
+        ["community", "model"],
+        registry=registry,
+    )
 
     with open("./communities.json") as handle:
         communities = json.load(handle)
@@ -175,18 +191,22 @@ def main(outfile):
     for community, urls in communities.items():
         for url in urls:
             try:
-                result = load(url)
+                versions, models = load(url)
             except KeyboardInterrupt:
                 import sys
 
                 sys.exit(1)
             except BaseException as ex:
                 continue
-            for version, sum in result.items():
+            for version, sum in versions.items():
                 match = base_pattern.match(version)
                 base = match.group("base")
                 metric_gluon_version_total.labels(
                     community=community, version=version, base=base
+                ).set(sum)
+            for model, sum in models.items():
+                metric_gluon_model_total.labels(
+                    community=community, model=model
                 ).set(sum)
 
     write_to_textfile(outfile, registry)
