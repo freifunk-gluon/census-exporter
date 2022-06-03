@@ -200,6 +200,9 @@
   "Ruhrgebiet": [
     "https://map.freifunk.ruhr/data/rgw/meshviewer.json"
   ],
+  "Saarland": [
+    "https://mgmt.saar.freifunk.net/data/nodes.json"
+  ],
   "Südholstein": [
     "https://map.freifunk-suedholstein.de/data/meshviewer.json"
   ],
