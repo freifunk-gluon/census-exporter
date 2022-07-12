@@ -8,6 +8,9 @@
   "Bergstrasse": [
     "https://karte.freifunk-bergstrasse.de/data/nodes.json"
   ],
+  "Bielefeld": [
+    "https://map.freifunk-bielefeld.de/meshviewer/data/meshviewer.json"
+  ],
   "Braunschweig": [
     "https://freifunk-bs.de/data/meshviewer.json"
   ],
