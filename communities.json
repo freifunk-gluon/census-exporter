@@ -123,6 +123,9 @@
   "Hamburg": [
     "https://hopglass-backend.hamburg.freifunk.net/nodes.json"
   ],
+  "Harz": [
+    "https://map.harz.freifunk.net/data/meshviewer.json"
+  ],
   "Hannover": [
     "https://hannover.freifunk.net/api/nodes.json"
   ],
