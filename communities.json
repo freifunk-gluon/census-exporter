@@ -177,6 +177,9 @@
   "Mainz/Wiesbaden": [
     "https://map.freifunk-mwu.de/data/meshviewer.json"
   ],
+  "Marburg": [
+    "https://api.marburg.freifunk.net/nodes.json"
+  ],
   "München": [
     "https://map.ffmuc.net/data/meshviewer.json"
   ],
