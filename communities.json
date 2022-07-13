@@ -248,6 +248,9 @@
   "Südpfalz": [
     "https://new.freifunk-suedpfalz.de/netzausbau/data/meshviewer.json"
   ],
+  "Südwest": [
+    "https://services.freifunk-suedwest.de/hopglass/nodes.json"
+  ],
   "Stuttgart": [
     "https://map.freifunk-stuttgart.de/data/meshviewer.json"
   ],
