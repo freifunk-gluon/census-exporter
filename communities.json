@@ -183,6 +183,9 @@
   "Münsterland": [
     "https://karte.freifunk-muensterland.de/data/nodes.json"
   ],
+  "Neuendettelsau": [
+    "https://karte.freifunk-neuendettelsau.de/data/nodes.json"
+  ],
   "Niersufer": [
     "https://map.freifunk-niersufer.de/data/meshviewer.json"
   ],
