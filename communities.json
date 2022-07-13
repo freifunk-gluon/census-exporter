@@ -135,6 +135,9 @@
   "Hannover": [
     "https://hannover.freifunk.net/api/nodes.json"
   ],
+  "Heilsbronn": [
+    "https://karte.freifunk-heilsbronn.de/data/nodes.json"
+  ],
   "Hochstift": [
     "https://map.hochstift.freifunk.net/data/nodes.json"
   ],
