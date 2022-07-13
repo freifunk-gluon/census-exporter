@@ -168,6 +168,9 @@
   "Leverkusen": [
     "https://map.fflev.de/data/meshviewer.json"
   ],
+  "Lippe": [
+    "https://map.freifunk-lippe.de/map/data/meshviewer.json"
+  ],
   "Lübeck": [
     "https://map.luebeck.freifunk.net/data/nodes.json"
   ],
