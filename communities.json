@@ -23,6 +23,9 @@
   "Darmstadt": [
     "https://meshviewer.darmstadt.freifunk.net/data/meshviewer.json"
   ],
+  "Donau-Ries": [
+    "http://karte.ffdon.de/data/nodes.json"
+  ],
   "Dreiländereck": [
     "https://map.freifunk-3laendereck.net/data/meshviewer.json"
   ],
