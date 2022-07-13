@@ -132,6 +132,9 @@
   "Hochstift": [
     "https://map.hochstift.freifunk.net/data/nodes.json"
   ],
+  "Ingolstadt": [
+    "https://map.freifunk-ingolstadt.de/yanic/meshviewer.json"
+  ],
   "Karlsruhe": [
     "https://api.karlsruhe.freifunk.net/yanic/meshviewer/meshviewer.json"
   ],
