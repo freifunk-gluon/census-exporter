@@ -233,6 +233,9 @@
   "Regensburg": [
     "https://regensburg.freifunk.net/data/meshviewer.json"
   ],
+  "Rheinbach": [
+    "https://map.freifunk-rheinbach.de/data/nodes.json"
+  ],
   "Rhein-Neckar": [
     "https://map.ffrn.de/data/meshviewer.json"
   ],
