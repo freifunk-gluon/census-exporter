@@ -14,6 +14,9 @@
   "Bielefeld": [
     "https://map.freifunk-bielefeld.de/meshviewer/data/meshviewer.json"
   ],
+  "Bochum": [
+    "http://map.freifunk-bochum.de:4000/nodes.json"
+  ],
   "Braunschweig": [
     "https://freifunk-bs.de/data/meshviewer.json"
   ],
