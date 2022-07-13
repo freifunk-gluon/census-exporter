@@ -5,6 +5,9 @@
   "Altdorf": [
     "https://map.tecff.de/yanic/meshviewer.json"
   ],
+  "Ansbach": [
+    "https://karte.freifunk-ansbach.de/data/nodes.json"
+  ],
   "Bergstrasse": [
     "https://karte.freifunk-bergstrasse.de/data/nodes.json"
   ],
