@@ -169,7 +169,7 @@
     "https://map.freifunk-niersufer.de/data/meshviewer.json"
   ],
   "Nord": [
-    "https://mesh.freifunknord.de/data/meshviewer.json",
+    "https://map.freifunknord.de/data/nodes.json",
     "https://mesh.freifunknord.de/iz/meshviewer.json",
     "https://mesh.freifunknord.de/ploh/meshviewer.json"
   ],
