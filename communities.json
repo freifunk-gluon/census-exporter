@@ -141,6 +141,9 @@
   "Heilsbronn": [
     "https://karte.freifunk-heilsbronn.de/data/nodes.json"
   ],
+  "Hennef": [
+    "https://map.freifunk-hennef.de/data/nodes.json"
+  ],
   "Hochstift": [
     "https://map.hochstift.freifunk.net/data/nodes.json"
   ],
