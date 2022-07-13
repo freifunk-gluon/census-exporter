@@ -186,6 +186,9 @@
   "Neuendettelsau": [
     "https://karte.freifunk-neuendettelsau.de/data/nodes.json"
   ],
+  "Neustadt-Aisch": [
+    "https://karte.freifunk-neustadt-aisch.de/data/nodes.json"
+  ],
   "Niersufer": [
     "https://map.freifunk-niersufer.de/data/meshviewer.json"
   ],
