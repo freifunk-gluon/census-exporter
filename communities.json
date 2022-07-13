@@ -20,6 +20,9 @@
   "Bremen": [
     "https://downloads.bremen.freifunk.net/data/meshviewer.json"
   ],
+  "Chemnitz": [
+    "https://descartes.chemnitz.freifunk.net/nodes.json"
+  ],
   "Darmstadt": [
     "https://meshviewer.darmstadt.freifunk.net/data/meshviewer.json"
   ],
