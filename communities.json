@@ -191,6 +191,9 @@
   "Ostholstein": [
     "https://coco.ffoh.de/meshviewer/data/meshviewer.json"
   ],
+  "Pinneberg": [
+    "https://meshviewer.pinneberg.freifunk.net/data/nodes.json"
+  ],
   "Regensburg": [
     "https://regensburg.freifunk.net/data/meshviewer.json"
   ],
