@@ -129,6 +129,9 @@
     "https://newmap.4830.org/data/map_04/nodes.json",
     "https://newmap.4830.org/data/map_66/nodes.json"
   ],
+  "Halle": [
+    "https://freifunk-halle.org/hopglass-server/nodes.json"
+  ],
   "Hamburg": [
     "https://hopglass-backend.hamburg.freifunk.net/nodes.json"
   ],
