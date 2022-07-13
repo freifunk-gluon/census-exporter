@@ -242,6 +242,9 @@
   "Roenkhausen": [
     "https://map.roenkhausen.de/meshviewer/data/meshviewer.json"
   ],
+  "Rothenburg": [
+    "https://netmon.freifunk-rothenburg.de/meshviewer/data/meshviewer.json"
+  ],
   "Ruhrgebiet": [
     "https://map.freifunk.ruhr/data/rgw/meshviewer.json"
   ],
