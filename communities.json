@@ -88,6 +88,9 @@
   "Einbeck": [
     "http://vps643489.ovh.net/meshviewer/data/meshviewer.json"
   ],
+  "Emskirchen": [
+    "https://karte.freifunk-emskirchen.de/data/nodes.json"
+  ],
   "Erfurt": [
     "https://map.erfurt.freifunk.net/meshviewer/data/meshviewer.json"
   ],
