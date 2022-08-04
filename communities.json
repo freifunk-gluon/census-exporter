@@ -45,7 +45,7 @@
     "https://map.freifunk-duesseldorf.de/data/meshviewer.json"
   ],
   "Eulenfunk": [
-    "https://map.eulenfunk.de/data/nodes.json", 
+    "https://map.eulenfunk.de/data/nodes.json"
   ],
   "Einbeck": [
     "http://vps643489.ovh.net/meshviewer/data/meshviewer.json"
