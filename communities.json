@@ -256,12 +256,18 @@
     "https://api.karlsruhe.freifunk.net/yanic/meshviewer/ffwp/meshviewer.json"
   ],
   "Winterberg": [
-    "https://map.freifunk-winterberg.net/data/wtbg/meshviewer.json",
-    "https://map.freifunk-winterberg.net/data/sdlh/meshviewer.json",
-    "https://map.freifunk-winterberg.net/data/hd/meshviewer.json",
-    "https://map.freifunk-winterberg.net/data/mdb/meshviewer.json",
+    "https://map.freifunk-winterberg.net/data/ar/meshviewer.json",
+    "https://map.freifunk-winterberg.net/data/bs/meshviewer.json",
     "https://map.freifunk-winterberg.net/data/doerfer/meshviewer.json",
+    "https://map.freifunk-winterberg.net/data/hd/meshviewer.json",
+    "https://map.freifunk-winterberg.net/data/hlb/meshviewer.json",
     "https://map.freifunk-winterberg.net/data/ln/meshviewer.json",
-    "https://map.freifunk-winterberg.net/data/hlb/meshviewer.json"
+    "https://map.freifunk-winterberg.net/data/mb/meshviewer.json",
+    "https://map.freifunk-winterberg.net/data/mdb/meshviewer.json",
+    "https://map.freifunk-winterberg.net/data/mq/meshviewer.json",
+    "https://map.freifunk-winterberg.net/data/sdlh/meshviewer.json",
+    "https://map.freifunk-winterberg.net/data/su/meshviewer.json",
+    "https://map.freifunk-winterberg.net/data/wa/meshviewer.json",
+    "https://map.freifunk-winterberg.net/data/wtbg/meshviewer.json"
   ]
 }
