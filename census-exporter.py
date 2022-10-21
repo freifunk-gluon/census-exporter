@@ -203,11 +203,11 @@ def main(outfile):
                 base = match.group("base")
                 metric_gluon_version_total.labels(
                     community=community, version=version, base=base
-                ).set(sum)
+                ).inc(sum)
             for model, sum in models.items():
                 metric_gluon_model_total.labels(
                     community=community, model=model
-                ).set(sum)
+                ).inc(sum)
 
     write_to_textfile(outfile, registry)
 
