@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "gluon-census-exporter"
+version = "2022.05.10"
+description = "Prometheus exporter for census data of Gluon communities"
+authors = ["Martin Weinelt <hexa@darmstadt.ccc.de>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+click = "^8.1.3"
+requests = "^2.27.1"
+structlog = "^21.5.0"
+prometheus-client = "^0.14.1"
+voluptuous = "^0.13.1"
+
+[tool.poetry.dev-dependencies]
+black = "^22.3.0"
+mypy = "^0.950"
+isort = "^5.10.1"
+
+[tool.poetry.scripts]
+gluon-census-exporter = "gluon_census_exporter.__main__:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
