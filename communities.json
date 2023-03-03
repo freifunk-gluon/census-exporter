@@ -71,6 +71,9 @@
   "Göttingen": [
     "https://map.cccgoe.de/data/meshviewer.json"
   ],
+  "Graz": [
+    "https://hopglass.ffgraz.net/data/nodes.json"
+  ],
   "Greifswald": [
     "https://map.ffhgw.de/data/meshviewer.json",
     "https://unifi.greifswald.freifunk.net/data/meshviewer.json"
