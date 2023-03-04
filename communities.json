@@ -8,9 +8,6 @@
   "Ansbach": [
     "https://karte.freifunk-ansbach.de/data/nodes.json"
   ],
-  "Bergstrasse": [
-    "https://karte.freifunk-bergstrasse.de/data/nodes.json"
-  ],
   "Bielefeld": [
     "https://map.freifunk-bielefeld.de/meshviewer/data/meshviewer.json"
   ],
