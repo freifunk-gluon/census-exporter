@@ -79,11 +79,7 @@
     "https://gg.indie-freifunk.net/data/meshviewer.json"
   ],
   "Gütersloh": [
-    "https://newmap.4830.org/data/map_01/nodes.json",
-    "https://newmap.4830.org/data/map_02/nodes.json",
-    "https://newmap.4830.org/data/map_03/nodes.json",
-    "https://newmap.4830.org/data/map_04/nodes.json",
-    "https://newmap.4830.org/data/map_66/nodes.json"
+    "https://map03.4830.org/data/nodes.json"
   ],
   "Halle": [
     "https://freifunk-halle.org/hopglass-server/nodes.json"
