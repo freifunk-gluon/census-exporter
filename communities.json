@@ -1,6 +1,6 @@
 {
   "Aachen": [
-    "https://data.aachen.freifunk.net/meshviewer.json"
+    "https://map.aachen.freifunk.net/data/meshviewer.json"
   ],
   "Altdorf": [
     "https://map.tecff.de/yanic/meshviewer.json"
@@ -9,7 +9,7 @@
     "https://karte.freifunk-ansbach.de/data/nodes.json"
   ],
   "Bielefeld": [
-    "https://map.freifunk-bielefeld.de/meshviewer/data/meshviewer.json"
+    "https://map03.4830.org/data/nodes.json"
   ],
   "Bochum": [
     "http://map.freifunk-bochum.de:4000/nodes.json"
@@ -115,7 +115,8 @@
     "https://falterturm.freifunk-vec.de/meshviewer.json"
   ],
   "Königswinter": [
-    "https://ffkwkarte.freifunk-koenigswinter.de/data/koenigswinter/meshviewer.json"
+    "https://ffkwsn03.freifunk-koenigswinter.de/data/meshviewer.json",
+    "https://map.divonet.de/data/sn04-netsplit/meshviewer.json"
   ],
   "Leipzig": [
     "http://karte.leipzig.freifunk.net:8018/meshviewer2/data/meshviewer.json"
@@ -128,9 +129,6 @@
   ],
   "Lübeck": [
     "https://map.luebeck.freifunk.net/data/nodes.json"
-  ],
-  "Lüneburg": [
-    "http://gw4.freifunk-lueneburg.de/meshviewer/data/meshviewer.json"
   ],
   "Malmö": [
     "http://gateway-01.mesh.pjodd.se/hopglass/nodes.json"
