@@ -1,4 +1,7 @@
 {
+  "4830.org": [
+    "https://map03.4830.org/data/nodes.json"
+  ],
   "Aachen": [
     "https://map.aachen.freifunk.net/data/meshviewer.json"
   ],
@@ -7,9 +10,6 @@
   ],
   "Ansbach": [
     "https://karte.freifunk-ansbach.de/data/nodes.json"
-  ],
-  "Bielefeld": [
-    "https://map03.4830.org/data/nodes.json"
   ],
   "Bochum": [
     "http://map.freifunk-bochum.de:4000/nodes.json"
@@ -21,7 +21,8 @@
     "https://downloads.bremen.freifunk.net/data/meshviewer.json"
   ],
   "Chemnitz": [
-    "https://descartes.chemnitz.freifunk.net/nodes.json"
+    "https://descartes.chemnitz.freifunk.net/nodes.json",
+    "https://brewster.chemnitz.freifunk.net/nodes.json"
   ],
   "Darmstadt": [
     "https://meshviewer.darmstadt.freifunk.net/data/meshviewer.json"
@@ -77,9 +78,6 @@
   ],
   "Groß-Gerau": [
     "https://gg.indie-freifunk.net/data/meshviewer.json"
-  ],
-  "Gütersloh": [
-    "https://map03.4830.org/data/nodes.json"
   ],
   "Halle": [
     "https://freifunk-halle.org/hopglass-server/nodes.json"
