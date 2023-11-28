@@ -27,6 +27,9 @@
   "Darmstadt": [
     "https://meshviewer.darmstadt.freifunk.net/data/meshviewer.json"
   ],
+  "Divonet": [
+    "https://map.divonet.de/data/sn04-netsplit/meshviewer.json"
+  ],
   "Donau-Ries": [
     "http://karte.ffdon.de/data/nodes.json"
   ],
@@ -111,10 +114,6 @@
   ],
   "Kitzingen": [
     "https://falterturm.freifunk-vec.de/meshviewer.json"
-  ],
-  "Königswinter": [
-    "https://ffkwsn03.freifunk-koenigswinter.de/data/meshviewer.json",
-    "https://map.divonet.de/data/sn04-netsplit/meshviewer.json"
   ],
   "Leipzig": [
     "http://karte.leipzig.freifunk.net:8018/meshviewer2/data/meshviewer.json"
