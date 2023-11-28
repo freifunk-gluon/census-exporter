@@ -1,15 +1,15 @@
 {
+  "4830.org": [
+    "https://map03.4830.org/data/nodes.json"
+  ],
   "Aachen": [
-    "https://data.aachen.freifunk.net/meshviewer.json"
+    "https://map.aachen.freifunk.net/data/meshviewer.json"
   ],
   "Altdorf": [
     "https://map.tecff.de/yanic/meshviewer.json"
   ],
   "Ansbach": [
     "https://karte.freifunk-ansbach.de/data/nodes.json"
-  ],
-  "Bielefeld": [
-    "https://map.freifunk-bielefeld.de/meshviewer/data/meshviewer.json"
   ],
   "Bochum": [
     "http://map.freifunk-bochum.de:4000/nodes.json"
@@ -21,10 +21,14 @@
     "https://downloads.bremen.freifunk.net/data/meshviewer.json"
   ],
   "Chemnitz": [
-    "https://descartes.chemnitz.freifunk.net/nodes.json"
+    "https://descartes.chemnitz.freifunk.net/nodes.json",
+    "https://brewster.chemnitz.freifunk.net/nodes.json"
   ],
   "Darmstadt": [
     "https://meshviewer.darmstadt.freifunk.net/data/meshviewer.json"
+  ],
+  "Divonet": [
+    "https://map.divonet.de/data/sn04-netsplit/meshviewer.json"
   ],
   "Donau-Ries": [
     "http://karte.ffdon.de/data/nodes.json"
@@ -78,9 +82,6 @@
   "Groß-Gerau": [
     "https://gg.indie-freifunk.net/data/meshviewer.json"
   ],
-  "Gütersloh": [
-    "https://map03.4830.org/data/nodes.json"
-  ],
   "Halle": [
     "https://freifunk-halle.org/hopglass-server/nodes.json"
   ],
@@ -114,9 +115,6 @@
   "Kitzingen": [
     "https://falterturm.freifunk-vec.de/meshviewer.json"
   ],
-  "Königswinter": [
-    "https://ffkwkarte.freifunk-koenigswinter.de/data/koenigswinter/meshviewer.json"
-  ],
   "Leipzig": [
     "http://karte.leipzig.freifunk.net:8018/meshviewer2/data/meshviewer.json"
   ],
@@ -128,9 +126,6 @@
   ],
   "Lübeck": [
     "https://map.luebeck.freifunk.net/data/nodes.json"
-  ],
-  "Lüneburg": [
-    "http://gw4.freifunk-lueneburg.de/meshviewer/data/meshviewer.json"
   ],
   "Malmö": [
     "http://gateway-01.mesh.pjodd.se/hopglass/nodes.json"
