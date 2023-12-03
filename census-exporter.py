@@ -67,6 +67,8 @@ def parse_meshviewer(data):
     for node in data["nodes"]:
         try:
             node_id = node["node_id"]
+            if not node_id:
+                continue
             if node_id in seen:
                 duplicates += 1
                 continue
@@ -86,6 +88,8 @@ def parse_nodes_json_v1(data, *kwargs):
     global seen, duplicates
     bases = defaultdict(int)
     for node_id, node in data["nodes"].items():
+        if not node_id:
+            continue
         if node_id in seen:
             duplicates += 1
             continue
@@ -107,6 +111,8 @@ def parse_nodes_json_v2(data, *kwargs):
     for node in data["nodes"]:
         try:
             node_id = node["nodeinfo"]["node_id"]
+            if not node_id:
+                continue
             if node_id in seen:
                 duplicates += 1
                 continue
@@ -164,6 +170,9 @@ def load(url):
             return format["parser"](data)
         except (Invalid, MultipleInvalid) as ex:
             pass
+        except BaseException as ex:
+            log.msg("Exception caught while processing data", ex=ex)
+            raise ex
 
     raise ValueError("No parser found")
 
