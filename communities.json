@@ -34,7 +34,7 @@
     "http://karte.ffdon.de/data/nodes.json"
   ],
   "Dortmund": [
-    "https://map-ng.ffdo.de/data/nodes.json"
+    "https://map.ffdo.de/data/nodes.json"
   ],
   "Dreiländereck": [
     "https://map.freifunk-3laendereck.net/data/meshviewer.json"
@@ -49,7 +49,7 @@
     "https://map.eulenfunk.de/data/nodes.json"
   ],
   "Einbeck": [
-    "http://vps643489.ovh.net/meshviewer/data/meshviewer.json"
+    "https://map.freifunkeinbeck.de/yanic/meshviewer.json"
   ],
   "Emskirchen": [
     "https://karte.freifunk-emskirchen.de/data/nodes.json"
