@@ -79,7 +79,7 @@ def parse_meshviewer(data):
             models[model] += 1
         except KeyError as ex:
             continue
-    return bases, models
+    return bases, models, dict()
 
 
 def parse_nodes_json_v1(data, *kwargs):
@@ -97,13 +97,14 @@ def parse_nodes_json_v1(data, *kwargs):
         match = version_pattern.match(base)
         if match:
             bases[match.group("version")] += 1
-    return bases, dict()
+    return bases, dict(), dict()
 
 
 def parse_nodes_json_v2(data, *kwargs):
     global seen, duplicates
     bases = defaultdict(int)
     models = defaultdict(int)
+    vpns = defaultdict(int)
     for node in data["nodes"]:
         try:
             node_id = node["nodeinfo"]["node_id"]
@@ -117,10 +118,12 @@ def parse_nodes_json_v2(data, *kwargs):
                 bases[match.group("version")] += 1
             model = normalize_model_name(node["nodeinfo"]["hardware"]["model"])
             models[model] += 1
+            vpn = node["nodeinfo"]["network"]["mesh_vpn"]["provider"]
+            vpns[vpn] += 1
         except KeyError as ex:
             continue
 
-    return bases, models
+    return bases, models, vpns
 
 
 register_hook("meshviewer", SCHEMA_MESHVIEWER, parse_meshviewer)
@@ -184,6 +187,12 @@ def main(outfile):
         ["community", "model"],
         registry=registry,
     )
+    metric_gluon_vpn_total = Gauge(
+        "gluon_vpn_total",
+        "Number of unique nodes using a certain vpn",
+        ["community", "vpn"],
+        registry=registry,
+    )
 
     with open("./communities.json") as handle:
         communities = json.load(handle)
@@ -191,7 +200,7 @@ def main(outfile):
     for community, urls in communities.items():
         for url in urls:
             try:
-                versions, models = load(url)
+                versions, models, vpns = load(url)
             except KeyboardInterrupt:
                 import sys
 
@@ -207,6 +216,10 @@ def main(outfile):
             for model, sum in models.items():
                 metric_gluon_model_total.labels(
                     community=community, model=model
+                ).inc(sum)
+            for vpn, sum in vpns.items():
+                metric_gluon_vpn_total.labels(
+                    community=community, vpn=vpn
                 ).inc(sum)
 
     write_to_textfile(outfile, registry)
