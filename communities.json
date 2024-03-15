@@ -3,10 +3,10 @@
     "https://map03.4830.org/data/nodes.json"
   ],
   "Aachen": [
-    "https://map.aachen.freifunk.net/data/meshviewer.json"
+    "https://map.aachen.freifunk.net/data/nodes.json"
   ],
   "Altdorf": [
-    "https://map.tecff.de/yanic/meshviewer.json"
+    "https://map.tecff.de/yanic/nodes.json"
   ],
   "Ansbach": [
     "https://karte.freifunk-ansbach.de/data/nodes.json"
@@ -15,17 +15,17 @@
     "http://map.freifunk-bochum.de:4000/nodes.json"
   ],
   "Braunschweig": [
-    "https://freifunk-bs.de/data/meshviewer.json"
+    "https://freifunk-bs.de/data/nodes.json"
   ],
   "Bremen": [
-    "https://downloads.bremen.freifunk.net/data/meshviewer.json"
+    "https://downloads.bremen.freifunk.net/data/nodes.json"
   ],
   "Chemnitz": [
     "https://descartes.chemnitz.freifunk.net/nodes.json",
     "https://brewster.chemnitz.freifunk.net/nodes.json"
   ],
   "Darmstadt": [
-    "https://meshviewer.darmstadt.freifunk.net/data/meshviewer.json"
+    "https://meshviewer.darmstadt.freifunk.net/data/nodes.json"
   ],
   "Divonet": [
     "https://map.divonet.de/data/sn04-netsplit/meshviewer.json"
@@ -37,46 +37,46 @@
     "https://map.ffdo.de/data/nodes.json"
   ],
   "Dreiländereck": [
-    "https://map.freifunk-3laendereck.net/data/meshviewer.json"
+    "https://map.freifunk-3laendereck.net/data/nodes.json"
   ],
   "Dresden": [
     "https://meshviewer.freifunk-dresden.de/data/nodes.json"
   ],
   "Düsseldorf": [
-    "https://map.freifunk-duesseldorf.de/data/meshviewer.json"
+    "https://map.freifunk-duesseldorf.de/data/nodes.json"
   ],
   "Eulenfunk": [
     "https://map.eulenfunk.de/data/nodes.json"
   ],
   "Einbeck": [
-    "https://map.freifunkeinbeck.de/yanic/meshviewer.json"
+    "https://map.freifunkeinbeck.de/yanic/nodes.json"
   ],
   "Emskirchen": [
     "https://karte.freifunk-emskirchen.de/data/nodes.json"
   ],
   "Erfurt": [
-    "https://map.erfurt.freifunk.net/meshviewer/data/meshviewer.json"
+    "https://map.erfurt.freifunk.net/meshviewer/data/nodes.json"
   ],
   "Essen": [
-    "https://map.freifunk-essen.de/data/meshviewer.json"
+    "https://map.freifunk-essen.de/data/nodes.json"
   ],
   "Ennepe-Ruhr": [
     "https://karte.ff-en.de/data/meshviewer.json"
   ],
   "Frankfurt": [
-    "https://yanic.batman15.ffffm.net/meshviewer.json"
+    "https://yanic.batman15.ffffm.net/nodes.json"
   ],
   "Fulda": [
     "https://meshviewer.fulda.freifunk.net/data/meshviewer.json"
   ],
   "Gera-Greiz": [
-    "https://www.freifunk-gera-greiz.de/meshviewer/data/meshviewer.json"
+    "https://www.freifunk-gera-greiz.de/meshviewer/data/nodes.json"
   ],
   "Göttingen": [
-    "https://map.cccgoe.de/data/meshviewer.json"
+    "https://map.cccgoe.de/data/nodes.json"
   ],
   "Greifswald": [
-    "https://map.ffhgw.de/data/meshviewer.json",
+    "https://map.ffhgw.de/data/nodes.json",
     "https://unifi.greifswald.freifunk.net/data/meshviewer.json"
   ],
   "Groß-Gerau": [
@@ -89,7 +89,7 @@
     "https://hopglass-backend.hamburg.freifunk.net/nodes.json"
   ],
   "Harz": [
-    "https://map.harz.freifunk.net/data/meshviewer.json"
+    "https://map.harz.freifunk.net/data/nodes.json"
   ],
   "Hannover": [
     "https://hannover.freifunk.net/api/nodes.json"
@@ -104,10 +104,10 @@
     "https://map.hochstift.freifunk.net/data/nodes.json"
   ],
   "Ingolstadt": [
-    "https://map.freifunk-ingolstadt.de/yanic/meshviewer.json"
+    "https://map.freifunk-ingolstadt.de/yanic/nodes.json"
   ],
   "Karlsruhe": [
-    "https://api.karlsruhe.freifunk.net/yanic/meshviewer/meshviewer.json"
+    "https://api.karlsruhe.freifunk.net/yanic/meshviewer/nodes.json"
   ],
   "Kiel": [
     "https://hopglass.freifunk.in-kiel.de/nodes.json"
@@ -122,7 +122,7 @@
     "https://map.fflev.de/data/meshviewer.json"
   ],
   "Lippe": [
-    "https://map.freifunk-lippe.de/map/data/meshviewer.json"
+    "https://map.freifunk-lippe.de/map/data/nodes.json"
   ],
   "Lübeck": [
     "https://map.luebeck.freifunk.net/data/nodes.json"
@@ -131,7 +131,7 @@
     "http://gateway-01.mesh.pjodd.se/hopglass/nodes.json"
   ],
   "Mainz/Wiesbaden": [
-    "https://map.freifunk-mwu.de/data/meshviewer.json"
+    "https://map.freifunk-mwu.de/data/nodes.json"
   ],
   "Marburg": [
     "https://api.marburg.freifunk.net/nodes.json"
@@ -140,7 +140,7 @@
     "https://map.ffmuc.net/data/meshviewer.json"
   ],
   "Mayen-Koblenz": [
-    "https://map.freifunk-myk.de/data/meshviewer.json"
+    "https://map.freifunk-myk.de/data/nodes.json"
   ],
   "Münsterland": [
     "https://karte.freifunk-muensterland.de/data/nodes.json"
@@ -156,20 +156,20 @@
   ],
   "Nord": [
     "https://map.freifunknord.de/data/nodes.json",
-    "https://mesh.freifunknord.de/iz/meshviewer.json",
+    "https://mesh.freifunknord.de/iz/nodes.json",
     "https://mesh.freifunknord.de/ploh/meshviewer.json"
   ],
   "Nordheide": [
     "https://map02.freifunk-nordheide.de/data/meshviewer.json"
   ],
   "Nordhessen": [
-    "https://map.freifunk-nordhessen.de/data/meshviewer.json"
+    "https://map.freifunk-nordhessen.de/data/nodes.json"
   ],
   "Nordwest": [
     "https://map.ffnw.de/data/meshviewer.json"
   ],
   "Ostholstein": [
-    "https://coco.ffoh.de/meshviewer/data/meshviewer.json"
+    "https://coco.ffoh.de/meshviewer/data/nodes.json"
   ],
   "Pinneberg": [
     "https://meshviewer.pinneberg.freifunk.net/data/nodes.json"
@@ -181,27 +181,27 @@
     "https://map.freifunk-rheinbach.de/data/nodes.json"
   ],
   "Rhein-Neckar": [
-    "https://map.ffrn.de/data/meshviewer.json"
+    "https://map.ffrn.de/data/nodes.json"
   ],
   "Rhein-Sieg": [
-    "https://map.freifunk-rhein-sieg.net/data/lohmar1/domain01/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/lohmar1/domain03/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/lohmar2/domain05/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/lohmar3/domain04/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/lohmar3/domain07/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/lohmar3/domain11/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/niederkassel1/domain01/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/niederkassel1/domain03/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/niederkassel1/domain04/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/niederkassel2/domain05/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/siegburg1/domain01/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/siegburg2/domain02/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/siegburg2/domain05/meshviewer.json",
+    "https://map.freifunk-rhein-sieg.net/data/lohmar1/domain01/nodes.json",
+    "https://map.freifunk-rhein-sieg.net/data/lohmar1/domain03/nodes.json",
+    "https://map.freifunk-rhein-sieg.net/data/lohmar2/domain05/nodes.json",
+    "https://map.freifunk-rhein-sieg.net/data/lohmar3/domain04/nodes.json",
+    "https://map.freifunk-rhein-sieg.net/data/lohmar3/domain07/nodes.json",
+    "https://map.freifunk-rhein-sieg.net/data/lohmar3/domain11/nodes.json",
+    "https://map.freifunk-rhein-sieg.net/data/niederkassel1/domain01/nodes.json",
+    "https://map.freifunk-rhein-sieg.net/data/niederkassel1/domain03/nodes.json",
+    "https://map.freifunk-rhein-sieg.net/data/niederkassel1/domain04/nodes.json",
+    "https://map.freifunk-rhein-sieg.net/data/niederkassel2/domain05/nodes.json",
+    "https://map.freifunk-rhein-sieg.net/data/siegburg1/domain01/nodes.json",
+    "https://map.freifunk-rhein-sieg.net/data/siegburg2/domain02/nodes.json",
+    "https://map.freifunk-rhein-sieg.net/data/siegburg2/domain05/nodes.json",
     "https://map.freifunk-rhein-sieg.net/data/tdf/all/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/tdf4/tdf/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/tdf5/inn/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/tdf6/flu/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/voreifel1/domain15/meshviewer.json"
+    "https://map.freifunk-rhein-sieg.net/data/tdf4/tdf/nodes.json",
+    "https://map.freifunk-rhein-sieg.net/data/tdf5/inn/nodes.json",
+    "https://map.freifunk-rhein-sieg.net/data/tdf6/flu/nodes.json",
+    "https://map.freifunk-rhein-sieg.net/data/voreifel1/domain15/nodes.json"
   ],
   "Roenkhausen": [
     "https://map.roenkhausen.de/meshviewer/data/meshviewer.json"
@@ -210,16 +210,16 @@
     "https://netmon.freifunk-rothenburg.de/meshviewer/data/meshviewer.json"
   ],
   "Ruhrgebiet": [
-    "https://map.freifunk.ruhr/data/rgw/meshviewer.json"
+    "https://map.freifunk.ruhr/data/rgw/nodes.json"
   ],
   "Saarland": [
     "https://mgmt.saar.freifunk.net/data/nodes.json"
   ],
   "Südholstein": [
-    "https://map.freifunk-suedholstein.de/data/meshviewer.json"
+    "https://map.freifunk-suedholstein.de/data/nodes.json"
   ],
   "Südpfalz": [
-    "https://new.freifunk-suedpfalz.de/netzausbau/data/meshviewer.json"
+    "https://new.freifunk-suedpfalz.de/netzausbau/data/nodes.json"
   ],
   "Südwest": [
     "https://services.freifunk-suedwest.de/hopglass/nodes.json"
@@ -228,13 +228,13 @@
     "https://map.freifunk-stuttgart.de/data/meshviewer.json"
   ],
   "Trier": [
-    "http://maps.tackin.de/data/meshviewer.json"
+    "http://maps.tackin.de/data/nodes.json"
   ],
   "Troisdorf": [
     "https://map.freifunk-troisdorf.de/data/api/meshviewer.json"
   ],
   "Tuttlingen": [
-    "https://map.freifunk-3laendereck.net/map-data/fftut/meshviewer.json"
+    "https://map.freifunk-3laendereck.net/map-data/fftut/nodes.json"
   ],
   "Uelzen": [
     "https://map.freifunk-uelzen.de/data/nodes.json"
@@ -243,10 +243,10 @@
     "https://map.freifunk-ulm.de/data/meshviewer.json"
   ],
   "Vogtland": [
-    "https://mapdata.freifunk-vogtland.net/meshviewer.json"
+    "https://mapdata.freifunk-vogtland.net/nodes.json"
   ],
   "Westpfalz": [
-    "https://api.karlsruhe.freifunk.net/yanic/meshviewer/ffwp/meshviewer.json"
+    "https://api.karlsruhe.freifunk.net/yanic/meshviewer/ffwp/nodes.json"
   ],
   "Winterberg": [
     "https://map.freifunk-winterberg.net/data/ar/meshviewer.json",
