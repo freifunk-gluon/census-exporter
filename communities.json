@@ -55,9 +55,6 @@
   "Divonet": [
     "https://map.divonet.de/data/sn04-netsplit/meshviewer.json"
   ],
-  "Donau-Ries": [
-    "http://karte.ffdon.de/data/nodes.json"
-  ],
   "Dortmund": [
     "https://map.ffdo.de/data/nodes.json"
   ],
