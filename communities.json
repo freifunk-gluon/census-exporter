@@ -56,7 +56,8 @@
     "https://map.divonet.de/data/sn04-netsplit/meshviewer.json"
   ],
   "Dortmund": [
-    "https://map.ffdo.de/data/nodes.json"
+    "https://map.ffdo.de/data/nodes.json",
+    "https://map-ng.ffdo.de/data/nodes.json"
   ],
   "Dreiländereck": [
     "https://map.freifunk-3laendereck.net/data/meshviewer.json"
