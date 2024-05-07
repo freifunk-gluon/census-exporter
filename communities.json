@@ -1,6 +1,31 @@
 {
   "4830.org": [
-    "https://map03.4830.org/data/nodes.json"
+    "https://map03.4830.org/data/map_01/nodes.json",
+    "https://map03.4830.org/data/map_02/nodes.json",
+    "https://map03.4830.org/data/map_03/nodes.json",
+    "https://map03.4830.org/data/map_04/nodes.json",
+    "https://map03.4830.org/data/map_05/nodes.json",
+    "https://map03.4830.org/data/map_06/nodes.json",
+    "https://map03.4830.org/data/map_07/nodes.json",
+    "https://map03.4830.org/data/map_08/nodes.json",
+    "https://map03.4830.org/data/map_09/nodes.json",
+    "https://map03.4830.org/data/map_10/nodes.json",
+    "https://map03.4830.org/data/map_11/nodes.json",
+    "https://map03.4830.org/data/map_12/nodes.json",
+    "https://map03.4830.org/data/map_13/nodes.json",
+    "https://map03.4830.org/data/map_14/nodes.json",
+    "https://map03.4830.org/data/map_15/nodes.json",
+    "https://map03.4830.org/data/map_16/nodes.json",
+    "https://map03.4830.org/data/map_17/nodes.json",
+    "https://map03.4830.org/data/map_18/nodes.json",
+    "https://map03.4830.org/data/map_19/nodes.json",
+    "https://map03.4830.org/data/map_21/nodes.json",
+    "https://map03.4830.org/data/map_22/nodes.json",
+    "https://map03.4830.org/data/map_23/nodes.json",
+    "https://map03.4830.org/data/map_24/nodes.json",
+    "https://map03.4830.org/data/map_25/nodes.json",
+    "https://map03.4830.org/data/map_31/nodes.json",
+    "https://map03.4830.org/data/map_66/nodes.json"
   ],
   "Aachen": [
     "https://map.aachen.freifunk.net/data/meshviewer.json"
@@ -30,11 +55,9 @@
   "Divonet": [
     "https://map.divonet.de/data/sn04-netsplit/meshviewer.json"
   ],
-  "Donau-Ries": [
-    "http://karte.ffdon.de/data/nodes.json"
-  ],
   "Dortmund": [
-    "https://map.ffdo.de/data/nodes.json"
+    "https://map.ffdo.de/data/nodes.json",
+    "https://map-ng.ffdo.de/data/nodes.json"
   ],
   "Dreiländereck": [
     "https://map.freifunk-3laendereck.net/data/meshviewer.json"
@@ -108,6 +131,13 @@
   ],
   "Karlsruhe": [
     "https://api.karlsruhe.freifunk.net/yanic/meshviewer/meshviewer.json"
+  ],
+  "KBU": [
+    "https://map.kbu.freifunk.net/data/ffkbub-V2/meshviewer.json",
+    "https://map.kbu.freifunk.net/data/ffkbuu-V2/meshviewer.json",
+    "https://map.kbu.freifunk.net/data/ffkbuk/meshviewer.json",
+    "https://map.kbu.freifunk.net/data/ffkbuu/meshviewer.json",
+    "https://map.kbu.freifunk.net/data/ffeu/meshviewer.json"
   ],
   "Kiel": [
     "https://hopglass.freifunk.in-kiel.de/nodes.json"
