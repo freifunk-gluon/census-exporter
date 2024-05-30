@@ -246,6 +246,9 @@
   "Vogtland": [
     "https://mapdata.freifunk-vogtland.net/meshviewer.json"
   ],
+  "Westerwald": [
+    "https://map.freifunk-westerwald.de/data/meshviewer.json"
+  ],
   "Westpfalz": [
     "https://api.karlsruhe.freifunk.net/yanic/meshviewer/ffwp/meshviewer.json"
   ],
