@@ -68,14 +68,14 @@
   "Düsseldorf": [
     "https://map.freifunk-duesseldorf.de/data/meshviewer.json"
   ],
-  "Eulenfunk": [
-    "https://map.eulenfunk.de/data/nodes.json"
-  ],
   "Einbeck": [
     "https://map.freifunkeinbeck.de/yanic/meshviewer.json"
   ],
   "Emskirchen": [
     "https://karte.freifunk-emskirchen.de/data/nodes.json"
+  ],
+  "Ennepe-Ruhr": [
+    "https://karte.ff-en.de/data/meshviewer.json"
   ],
   "Erfurt": [
     "https://map.erfurt.freifunk.net/meshviewer/data/meshviewer.json"
@@ -83,8 +83,8 @@
   "Essen": [
     "https://map.freifunk-essen.de/data/meshviewer.json"
   ],
-  "Ennepe-Ruhr": [
-    "https://karte.ff-en.de/data/meshviewer.json"
+  "Eulenfunk": [
+    "https://map.eulenfunk.de/data/nodes.json"
   ],
   "Frankfurt": [
     "https://yanic.batman15.ffffm.net/meshviewer.json"
@@ -95,9 +95,6 @@
   "Gera-Greiz": [
     "https://www.freifunk-gera-greiz.de/meshviewer/data/meshviewer.json"
   ],
-  "Göttingen": [
-    "https://map.cccgoe.de/data/meshviewer.json"
-  ],
   "Greifswald": [
     "https://map.ffhgw.de/data/meshviewer.json",
     "https://unifi.greifswald.freifunk.net/data/meshviewer.json"
@@ -105,17 +102,20 @@
   "Groß-Gerau": [
     "https://gg.indie-freifunk.net/data/meshviewer.json"
   ],
+  "Göttingen": [
+    "https://map.cccgoe.de/data/meshviewer.json"
+  ],
   "Halle": [
     "https://freifunk-halle.org/hopglass-server/nodes.json"
   ],
   "Hamburg": [
     "https://hopglass-backend.hamburg.freifunk.net/nodes.json"
   ],
-  "Harz": [
-    "https://map.harz.freifunk.net/data/meshviewer.json"
-  ],
   "Hannover": [
     "https://hannover.freifunk.net/api/nodes.json"
+  ],
+  "Harz": [
+    "https://map.harz.freifunk.net/data/meshviewer.json"
   ],
   "Heilsbronn": [
     "https://karte.freifunk-heilsbronn.de/data/nodes.json"
@@ -126,15 +126,15 @@
   "Ingolstadt": [
     "https://map.freifunk-ingolstadt.de/yanic/meshviewer.json"
   ],
-  "Karlsruhe": [
-    "https://api.karlsruhe.freifunk.net/yanic/meshviewer/meshviewer.json"
-  ],
   "KBU": [
     "https://map.kbu.freifunk.net/data/ffkbub-V2/meshviewer.json",
     "https://map.kbu.freifunk.net/data/ffkbuu-V2/meshviewer.json",
     "https://map.kbu.freifunk.net/data/ffkbuk/meshviewer.json",
     "https://map.kbu.freifunk.net/data/ffkbuu/meshviewer.json",
     "https://map.kbu.freifunk.net/data/ffeu/meshviewer.json"
+  ],
+  "Karlsruhe": [
+    "https://api.karlsruhe.freifunk.net/yanic/meshviewer/meshviewer.json"
   ],
   "Kiel": [
     "https://hopglass.freifunk.in-kiel.de/nodes.json"
@@ -154,20 +154,20 @@
   "Lübeck": [
     "https://map.luebeck.freifunk.net/data/nodes.json"
   ],
-  "Malmö": [
-    "http://gateway-01.mesh.pjodd.se/hopglass/nodes.json"
-  ],
   "Mainz/Wiesbaden": [
     "https://map.freifunk-mwu.de/data/meshviewer.json"
+  ],
+  "Malmö": [
+    "http://gateway-01.mesh.pjodd.se/hopglass/nodes.json"
   ],
   "Marburg": [
     "https://api.marburg.freifunk.net/nodes.json"
   ],
-  "München": [
-    "https://map.ffmuc.net/data/meshviewer.json"
-  ],
   "Mayen-Koblenz": [
     "https://map.freifunk-myk.de/data/meshviewer.json"
+  ],
+  "München": [
+    "https://map.ffmuc.net/data/meshviewer.json"
   ],
   "Münsterland": [
     "https://karte.freifunk-muensterland.de/data/nodes.json"
@@ -203,9 +203,6 @@
   "Regensburg": [
     "https://regensburg.freifunk.net/data/meshviewer.json"
   ],
-  "Rheinbach": [
-    "https://map.freifunk-rheinbach.de/data/nodes.json"
-  ],
   "Rhein-Neckar": [
     "https://map.ffrn.de/data/meshviewer.json"
   ],
@@ -229,6 +226,9 @@
     "https://map.freifunk-rhein-sieg.net/data/tdf6/flu/meshviewer.json",
     "https://map.freifunk-rhein-sieg.net/data/voreifel1/domain15/meshviewer.json"
   ],
+  "Rheinbach": [
+    "https://map.freifunk-rheinbach.de/data/nodes.json"
+  ],
   "Roenkhausen": [
     "https://map.roenkhausen.de/meshviewer/data/meshviewer.json"
   ],
@@ -241,6 +241,9 @@
   "Saarland": [
     "https://mgmt.saar.freifunk.net/data/nodes.json"
   ],
+  "Stuttgart": [
+    "https://map.freifunk-stuttgart.de/data/meshviewer.json"
+  ],
   "Südholstein": [
     "https://map.freifunk-suedholstein.de/data/meshviewer.json"
   ],
@@ -249,9 +252,6 @@
   ],
   "Südwest": [
     "https://services.freifunk-suedwest.de/hopglass/nodes.json"
-  ],
-  "Stuttgart": [
-    "https://map.freifunk-stuttgart.de/data/meshviewer.json"
   ],
   "Trier": [
     "http://maps.tackin.de/data/meshviewer.json"
