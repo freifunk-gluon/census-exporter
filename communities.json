@@ -115,7 +115,7 @@
     "https://map.harz.freifunk.net/data/meshviewer.json"
   ],
   "Hannover": [
-    "https://hannover.freifunk.net/api/nodes.json"
+    "https://harvester.ffh.zone/api/meshviewer.json"
   ],
   "Heilsbronn": [
     "https://karte.freifunk-heilsbronn.de/data/nodes.json"
