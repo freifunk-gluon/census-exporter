@@ -86,6 +86,9 @@
   "Eulenfunk": [
     "https://map.eulenfunk.de/data/nodes.json"
   ],
+  "Flensburg": [
+    "https://map.freifunk-flensburg.de/data/meshviewerv2.json"
+  ],
   "Frankfurt": [
     "https://yanic.batman15.ffffm.net/meshviewer.json"
   ],
