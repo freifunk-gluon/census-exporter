@@ -154,6 +154,9 @@
   "Mayen-Koblenz": [
     "https://map.freifunk-myk.de/data/meshviewer.json"
   ],
+  "Märkischer Kreis": [
+    "https://map.freifunk-mk.de/data/meshviewer.json"
+  ],
   "München": [
     "https://map.ffmuc.net/data/meshviewer.json"
   ],
