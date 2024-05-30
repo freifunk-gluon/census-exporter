@@ -143,9 +143,6 @@
   "Kitzingen": [
     "https://falterturm.freifunk-vec.de/meshviewer.json"
   ],
-  "Leipzig": [
-    "http://karte.leipzig.freifunk.net:8018/meshviewer2/data/meshviewer.json"
-  ],
   "Leverkusen": [
     "https://map.fflev.de/data/meshviewer.json"
   ],
