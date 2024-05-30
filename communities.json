@@ -161,6 +161,9 @@
   "Luxembourg": [
     "https://map.freifunk.lu/data/meshviewer.json"
   ],
+  "Magdeburg": [
+    "https://map.md.freifunk.net/data/meshviewer.json"
+  ],
   "Mainz/Wiesbaden": [
     "https://map.freifunk-mwu.de/data/meshviewer.json"
   ],
