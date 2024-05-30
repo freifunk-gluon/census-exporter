@@ -158,6 +158,9 @@
   "Lübeck": [
     "https://map.luebeck.freifunk.net/data/nodes.json"
   ],
+  "Luxembourg": [
+    "https://map.freifunk.lu/data/meshviewer.json"
+  ],
   "Mainz/Wiesbaden": [
     "https://map.freifunk-mwu.de/data/meshviewer.json"
   ],
