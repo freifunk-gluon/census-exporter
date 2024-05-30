@@ -246,9 +246,6 @@
   "Trier": [
     "https://maps.tackin.de/data/meshviewer.json"
   ],
-  "Ulm": [
-    "https://map.freifunk-ulm.de/data/meshviewer.json"
-  ],
   "Vogtland": [
     "https://mapdata.freifunk-vogtland.net/meshviewer.json"
   ],
