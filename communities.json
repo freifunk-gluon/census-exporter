@@ -173,9 +173,6 @@
   "Neustadt-Aisch": [
     "https://karte.freifunk-neustadt-aisch.de/data/nodes.json"
   ],
-  "Niersufer": [
-    "https://map.freifunk-niersufer.de/data/meshviewer.json"
-  ],
   "Nord": [
     "https://map.freifunknord.de/data/nodes.json",
     "https://mesh.freifunknord.de/iz/meshviewer.json",
