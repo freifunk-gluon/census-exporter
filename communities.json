@@ -69,14 +69,14 @@
   "Düsseldorf": [
     "https://map.freifunk-duesseldorf.de/data/meshviewer.json"
   ],
-  "Eulenfunk": [
-    "https://map.eulenfunk.de/data/nodes.json"
-  ],
   "Einbeck": [
     "https://map.freifunkeinbeck.de/yanic/meshviewer.json"
   ],
   "Emskirchen": [
     "https://karte.freifunk-emskirchen.de/data/nodes.json"
+  ],
+  "Ennepe-Ruhr": [
+    "https://karte.ff-en.de/data/meshviewer.json"
   ],
   "Erfurt": [
     "https://map.erfurt.freifunk.net/meshviewer/data/meshviewer.json"
@@ -84,8 +84,8 @@
   "Essen": [
     "https://map.freifunk-essen.de/data/meshviewer.json"
   ],
-  "Ennepe-Ruhr": [
-    "https://karte.ff-en.de/data/meshviewer.json"
+  "Eulenfunk": [
+    "https://map.eulenfunk.de/data/nodes.json"
   ],
   "Flensburg": [
     "https://map.freifunk-flensburg.de/data/meshviewerv2.json"
@@ -112,11 +112,11 @@
   "Hamburg": [
     "https://hopglass-backend.hamburg.freifunk.net/nodes.json"
   ],
-  "Harz": [
-    "https://map.harz.freifunk.net/data/meshviewer.json"
-  ],
   "Hannover": [
     "https://harvester.ffh.zone/api/meshviewer.json"
+  ],
+  "Harz": [
+    "https://map.harz.freifunk.net/data/meshviewer.json"
   ],
   "Heilsbronn": [
     "https://karte.freifunk-heilsbronn.de/data/nodes.json"
@@ -161,11 +161,11 @@
   "Märkischer Kreis": [
     "https://map.freifunk-mk.de/data/meshviewer.json"
   ],
-  "München": [
-    "https://map.ffmuc.net/data/meshviewer.json"
-  ],
   "Mayen-Koblenz": [
     "https://map.freifunk-myk.de/data/meshviewer.json"
+  ],
+  "München": [
+    "https://map.ffmuc.net/data/meshviewer.json"
   ],
   "Münsterland": [
     "https://karte.freifunk-muensterland.de/data/nodes.json"
