@@ -207,9 +207,6 @@
   "Regensburg": [
     "https://regensburg.freifunk.net/data/meshviewer.json"
   ],
-  "Rheinbach": [
-    "https://map.freifunk-rheinbach.de/data/nodes.json"
-  ],
   "Rhein-Neckar": [
     "https://map.ffrn.de/data/meshviewer.json"
   ],
@@ -228,9 +225,6 @@
     "https://map.freifunk-rhein-sieg.net/data/siegburg2/domain02/meshviewer.json",
     "https://map.freifunk-rhein-sieg.net/data/siegburg2/domain05/meshviewer.json",
     "https://map.freifunk-rhein-sieg.net/data/tdf/all/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/tdf4/tdf/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/tdf5/inn/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/tdf6/flu/meshviewer.json",
     "https://map.freifunk-rhein-sieg.net/data/voreifel1/domain15/meshviewer.json"
   ],
   "Roenkhausen": [
@@ -259,15 +253,6 @@
   ],
   "Trier": [
     "http://maps.tackin.de/data/meshviewer.json"
-  ],
-  "Troisdorf": [
-    "https://map.freifunk-troisdorf.de/data/api/meshviewer.json"
-  ],
-  "Tuttlingen": [
-    "https://map.freifunk-3laendereck.net/map-data/fftut/meshviewer.json"
-  ],
-  "Uelzen": [
-    "https://map.freifunk-uelzen.de/data/nodes.json"
   ],
   "Ulm": [
     "https://map.freifunk-ulm.de/data/meshviewer.json"
