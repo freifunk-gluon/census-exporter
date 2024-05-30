@@ -212,9 +212,6 @@
     "https://map.freifunk-rhein-sieg.net/data/siegburg2/domain02/meshviewer.json",
     "https://map.freifunk-rhein-sieg.net/data/siegburg2/domain05/meshviewer.json",
     "https://map.freifunk-rhein-sieg.net/data/tdf/all/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/tdf4/tdf/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/tdf5/inn/meshviewer.json",
-    "https://map.freifunk-rhein-sieg.net/data/tdf6/flu/meshviewer.json",
     "https://map.freifunk-rhein-sieg.net/data/voreifel1/domain15/meshviewer.json"
   ],
   "Rheinbach": [
@@ -243,9 +240,6 @@
   ],
   "Trier": [
     "http://maps.tackin.de/data/meshviewer.json"
-  ],
-  "Troisdorf": [
-    "https://map.freifunk-troisdorf.de/data/api/meshviewer.json"
   ],
   "Tuttlingen": [
     "https://map.freifunk-3laendereck.net/map-data/fftut/meshviewer.json"
