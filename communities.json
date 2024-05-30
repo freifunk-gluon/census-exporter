@@ -123,6 +123,9 @@
   "Heilsbronn": [
     "https://karte.freifunk-heilsbronn.de/data/nodes.json"
   ],
+  "Herford": [
+    "http://map.herford.freifunk.net/data/nodes.json"
+  ],
   "Hochstift": [
     "https://map.hochstift.freifunk.net/data/nodes.json"
   ],
