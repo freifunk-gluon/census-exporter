@@ -149,9 +149,6 @@
   "Lübeck": [
     "https://map.luebeck.freifunk.net/data/nodes.json"
   ],
-  "Malmö": [
-    "http://gateway-01.mesh.pjodd.se/hopglass/nodes.json"
-  ],
   "Mainz/Wiesbaden": [
     "https://map.freifunk-mwu.de/data/meshviewer.json"
   ],
