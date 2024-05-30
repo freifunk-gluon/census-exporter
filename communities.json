@@ -263,9 +263,6 @@
   "Troisdorf": [
     "https://map.freifunk-troisdorf.de/data/api/meshviewer.json"
   ],
-  "Uelzen": [
-    "https://map.freifunk-uelzen.de/data/nodes.json"
-  ],
   "Ulm": [
     "https://map.freifunk-ulm.de/data/meshviewer.json"
   ],
