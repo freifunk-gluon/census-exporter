@@ -33,6 +33,9 @@
   "Altdorf": [
     "https://map.tecff.de/yanic/meshviewer.json"
   ],
+  "Altmühltal": [
+    "https://map.freifunk-altmuehltal.de/data/nodes.json"
+  ],
   "Ansbach": [
     "https://karte.freifunk-ansbach.de/data/nodes.json"
   ],
