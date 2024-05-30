@@ -103,9 +103,6 @@
     "https://map.ffhgw.de/data/meshviewer.json",
     "https://wieckertor.ffhgw.de/data/meshviewer.json"
   ],
-  "Groß-Gerau": [
-    "https://gg.indie-freifunk.net/data/meshviewer.json"
-  ],
   "Halle": [
     "https://freifunk-halle.org/hopglass-server/nodes.json"
   ],
