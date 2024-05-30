@@ -247,9 +247,6 @@
   "Trier": [
     "http://maps.tackin.de/data/meshviewer.json"
   ],
-  "Tuttlingen": [
-    "https://map.freifunk-3laendereck.net/map-data/fftut/meshviewer.json"
-  ],
   "Vogtland": [
     "https://mapdata.freifunk-vogtland.net/meshviewer.json"
   ],
