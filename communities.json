@@ -160,6 +160,9 @@
   "Mayen-Koblenz": [
     "https://map.freifunk-myk.de/data/meshviewer.json"
   ],
+  "Mittelsachsen": [
+    "https://karte.freifunk-mittelsachsen.de/meshviewer-data/nodes.json"
+  ],
   "Märkischer Kreis": [
     "https://map.freifunk-mk.de/data/meshviewer.json"
   ],
