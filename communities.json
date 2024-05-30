@@ -87,6 +87,9 @@
   "Ennepe-Ruhr": [
     "https://karte.ff-en.de/data/meshviewer.json"
   ],
+  "Flensburg": [
+    "https://map.freifunk-flensburg.de/data/meshviewerv2.json"
+  ],
   "Frankfurt": [
     "https://yanic.batman15.ffffm.net/meshviewer.json"
   ],
