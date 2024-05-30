@@ -167,6 +167,9 @@
   "Mayen-Koblenz": [
     "https://map.freifunk-myk.de/data/meshviewer.json"
   ],
+  "Mittelsachsen": [
+    "https://karte.freifunk-mittelsachsen.de/meshviewer-data/nodes.json"
+  ],
   "München": [
     "https://map.ffmuc.net/data/meshviewer.json"
   ],
