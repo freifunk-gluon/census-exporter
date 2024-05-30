@@ -53,6 +53,7 @@
     "https://meshviewer.darmstadt.freifunk.net/data/meshviewer.json"
   ],
   "Divonet": [
+    "https://ffkwsn03.freifunk-koenigswinter.de/data/meshviewer.json",
     "https://map.divonet.de/data/sn04-netsplit/meshviewer.json"
   ],
   "Dortmund": [
