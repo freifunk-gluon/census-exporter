@@ -263,9 +263,6 @@
   "Troisdorf": [
     "https://map.freifunk-troisdorf.de/data/api/meshviewer.json"
   ],
-  "Tuttlingen": [
-    "https://map.freifunk-3laendereck.net/map-data/fftut/meshviewer.json"
-  ],
   "Uelzen": [
     "https://map.freifunk-uelzen.de/data/nodes.json"
   ],
