@@ -151,6 +151,9 @@
   "Lippe": [
     "https://map.freifunk-lippe.de/map/data/meshviewer.json"
   ],
+  "Luxembourg": [
+    "https://map.freifunk.lu/data/meshviewer.json"
+  ],
   "Lübeck": [
     "https://map.luebeck.freifunk.net/data/nodes.json"
   ],
