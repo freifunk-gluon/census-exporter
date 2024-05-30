@@ -136,9 +136,6 @@
   "Kiel": [
     "https://hopglass.freifunk.in-kiel.de/nodes.json"
   ],
-  "Kitzingen": [
-    "https://falterturm.freifunk-vec.de/meshviewer.json"
-  ],
   "Leverkusen": [
     "https://map.fflev.de/data/meshviewer.json"
   ],
