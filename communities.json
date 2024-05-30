@@ -86,6 +86,9 @@
   "Ennepe-Ruhr": [
     "https://karte.ff-en.de/data/meshviewer.json"
   ],
+  "Euskirchen": [
+    "https://map.ffeu.de/data/meshviewer.json"
+  ],
   "Frankfurt": [
     "https://yanic.batman15.ffffm.net/meshviewer.json"
   ],
@@ -134,10 +137,7 @@
   ],
   "KBU": [
     "https://map.kbu.freifunk.net/data/ffkbub-V2/meshviewer.json",
-    "https://map.kbu.freifunk.net/data/ffkbuu-V2/meshviewer.json",
-    "https://map.kbu.freifunk.net/data/ffkbuk/meshviewer.json",
-    "https://map.kbu.freifunk.net/data/ffkbuu/meshviewer.json",
-    "https://map.kbu.freifunk.net/data/ffeu/meshviewer.json"
+    "https://map.kbu.freifunk.net/data/ffkbuu-V2/meshviewer.json"
   ],
   "Kiel": [
     "https://hopglass.freifunk.in-kiel.de/nodes.json"
