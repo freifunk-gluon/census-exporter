@@ -121,6 +121,9 @@
   "Heilsbronn": [
     "https://karte.freifunk-heilsbronn.de/data/nodes.json"
   ],
+  "Helgoland": [
+    "http://karte.helgoland.freifunk.net/data/nodes.json"
+  ],
   "Hennef": [
     "https://map.freifunk-hennef.de/data/nodes.json"
   ],
