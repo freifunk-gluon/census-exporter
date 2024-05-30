@@ -229,9 +229,6 @@
   "Rheinbach": [
     "https://map.freifunk-rheinbach.de/data/nodes.json"
   ],
-  "Roenkhausen": [
-    "https://map.roenkhausen.de/meshviewer/data/meshviewer.json"
-  ],
   "Rothenburg": [
     "https://netmon.freifunk-rothenburg.de/meshviewer/data/meshviewer.json"
   ],
