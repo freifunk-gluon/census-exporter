@@ -183,8 +183,7 @@
   ],
   "Nord": [
     "https://map.freifunknord.de/data/nodes.json",
-    "https://mesh.freifunknord.de/iz/meshviewer.json",
-    "https://mesh.freifunknord.de/ploh/meshviewer.json"
+    "https://mesh.freifunknord.de/iz/meshviewer.json"
   ],
   "Nordheide": [
     "https://map02.freifunk-nordheide.de/data/meshviewer.json"
