@@ -64,6 +64,7 @@ def parse_meshviewer(data):
     global seen, duplicates
     bases = defaultdict(int)
     models = defaultdict(int)
+    domains = defaultdict(int)
     for node in data["nodes"]:
         try:
             node_id = node["node_id"]
@@ -77,9 +78,11 @@ def parse_meshviewer(data):
                 bases[match.group("version")] += 1
             model = normalize_model_name(node["model"])
             models[model] += 1
+            domain = node["domain"]
+            domains[domain] += 1
         except KeyError as ex:
             continue
-    return bases, models
+    return bases, models, domains
 
 
 def parse_nodes_json_v1(data, *kwargs):
@@ -97,13 +100,14 @@ def parse_nodes_json_v1(data, *kwargs):
         match = version_pattern.match(base)
         if match:
             bases[match.group("version")] += 1
-    return bases, dict()
+    return bases, dict(), dict()
 
 
 def parse_nodes_json_v2(data, *kwargs):
     global seen, duplicates
     bases = defaultdict(int)
     models = defaultdict(int)
+    domains = defaultdict(int)
     for node in data["nodes"]:
         try:
             node_id = node["nodeinfo"]["node_id"]
@@ -117,10 +121,12 @@ def parse_nodes_json_v2(data, *kwargs):
                 bases[match.group("version")] += 1
             model = normalize_model_name(node["nodeinfo"]["hardware"]["model"])
             models[model] += 1
+            domain = node["nodeinfo"]["system"]["domain_code"]
+            domains[domain] += 1
         except KeyError as ex:
             continue
 
-    return bases, models
+    return bases, models, domains
 
 
 register_hook("meshviewer", SCHEMA_MESHVIEWER, parse_meshviewer)
@@ -184,6 +190,12 @@ def main(outfile):
         ["community", "model"],
         registry=registry,
     )
+    metric_gluon_domain_total = Gauge(
+        "gluon_domain_total",
+        "Number of unique nodes on a specific Gluon domain",
+        ["community", "domain"],
+        registry=registry,
+    )
 
     with open("./communities.json") as handle:
         communities = json.load(handle)
@@ -191,7 +203,7 @@ def main(outfile):
     for community, urls in communities.items():
         for url in urls:
             try:
-                versions, models = load(url)
+                versions, models, domains = load(url)
             except KeyboardInterrupt:
                 import sys
 
@@ -207,6 +219,10 @@ def main(outfile):
             for model, sum in models.items():
                 metric_gluon_model_total.labels(
                     community=community, model=model
+                ).inc(sum)
+            for domain, sum in domains.items():
+                metric_gluon_domain_total.labels(
+                    community=community, domain=domain
                 ).inc(sum)
 
     write_to_textfile(outfile, registry)
