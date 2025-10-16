@@ -6,7 +6,7 @@ from click.testing import CliRunner
 census_exporter = importlib.import_module("census-exporter")
 
 
-def test_main():
+def test_main() -> None:
     runner = CliRunner()
     output_filename = "test_output.prom"
 

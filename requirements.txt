@@ -3,9 +3,11 @@ click
 colorama
 prometheus_client
 requests
+types-requests
 structlog
 voluptuous
 
 # test requirements
+mypy
 pytest
 ruff
