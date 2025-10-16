@@ -34,7 +34,7 @@ duplicates = 0
 SCHEMA_MESHVIEWER = Schema({"timestamp": str, "nodes": [dict], "links": [dict]})
 
 SCHEMA_MESHVIEWER_OLD = Schema(
-    {"meta": {"timestamp": str}, "nodes": [dict], "links": [dict]}
+    {"meta": {"timestamp": str}, "nodes": [dict], "links": [dict]},
 )
 
 SCHEMA_NODESJSONV1 = Schema({"timestamp": str, "version": 1, "nodes": dict})
@@ -156,7 +156,9 @@ def download(url: str, timeout: float = 5) -> requests.models.Response:
 
     if response.status_code != 200:
         log.msg(
-            "Unexpected HTTP status code", status_code=response.status_code, url=url
+            "Unexpected HTTP status code",
+            status_code=response.status_code,
+            url=url,
         )
         raise RuntimeError("Unexpected HTTP status code")
 
@@ -246,15 +248,17 @@ def main(outfile: str) -> None:
                 raise ValueError(msg)
             base = match.group("base")
             metric_gluon_version_total.labels(
-                community=community, version=version, base=base
+                community=community,
+                version=version,
+                base=base,
             ).inc(version_sum)
         for model, model_sum in models.items():
             metric_gluon_model_total.labels(community=community, model=model).inc(
-                model_sum
+                model_sum,
             )
         for domain, domain_sum in domains.items():
             metric_gluon_domain_total.labels(community=community, domain=domain).inc(
-                domain_sum
+                domain_sum,
             )
 
     write_to_textfile(outfile, registry)
