@@ -162,7 +162,7 @@ def load(url: str) -> tuple[dict[str, int], dict[str, int], dict[str, int]]:
     for name, format_set in FORMATS.items():
         try:
             format_set["schema"](data)
-            print(f"{name}\t{url}")
+            log.msg("Processing", format=name, url=url)
             return format_set["parser"](data)
         except (Invalid, MultipleInvalid):
             pass
@@ -242,8 +242,7 @@ def main(outfile: str) -> None:
 
     write_to_textfile(outfile, registry)
 
-    print(len(seen), "unique nodes")
-    print(duplicates, "duplicates skipped")
+    log.msg("Summary", unique=len(seen), duplicate=duplicates)
 
 
 if __name__ == "__main__":
