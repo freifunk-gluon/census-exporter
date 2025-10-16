@@ -18,7 +18,8 @@ jobs:
       - name: Build
         run: ./census-exporter.py out/gluon-census.prom
       - name: Archive output
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: census-output
           path: out
+          overwrite: true
