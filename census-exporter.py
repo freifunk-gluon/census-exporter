@@ -112,7 +112,7 @@ def parse_nodes_json_v1(
         match = VERSION_PATTERN.match(base)
         if match:
             bases[match.group("version")] += 1
-    return bases, dict(), dict()
+    return bases, {}, {}
 
 
 def parse_nodes_json_v2(
