@@ -3,6 +3,7 @@
 import json
 import re
 from collections import defaultdict
+from collections.abc import Callable
 from functools import reduce
 from multiprocessing.pool import ThreadPool
 from operator import getitem
@@ -35,15 +36,21 @@ SCHEMA_NODESJSONV2 = Schema({"timestamp": str, "version": 2, "nodes": [dict]})
 FORMATS = {}
 
 
-def normalize_model_name(name):
+def normalize_model_name(name: str) -> str:
     return re.sub(r"\s+", " ", name)
 
 
-def register_hook(name, schema, parser):
+def register_hook(
+    name: str,
+    schema: Schema,
+    parser: Callable[[dict], tuple[dict[str, int], dict[str, int], dict[str, int]]],
+) -> None:
     FORMATS[name] = {"schema": schema, "parser": parser}
 
 
-def parse_meshviewer(data):
+def parse_meshviewer(
+    data: dict,
+) -> tuple[dict[str, int], dict[str, int], dict[str, int]]:
     global seen, duplicates
     bases = defaultdict(int)
     models = defaultdict(int)
@@ -68,7 +75,9 @@ def parse_meshviewer(data):
     return bases, models, domains
 
 
-def parse_nodes_json_v1(data, *kwargs):
+def parse_nodes_json_v1(
+    data: dict,
+) -> tuple[dict[str, int], dict[str, int], dict[str, int]]:
     global seen, duplicates
     bases = defaultdict(int)
     for node_id, node in data["nodes"].items():
@@ -86,7 +95,9 @@ def parse_nodes_json_v1(data, *kwargs):
     return bases, dict(), dict()
 
 
-def parse_nodes_json_v2(data, *kwargs):
+def parse_nodes_json_v2(
+    data: dict,
+) -> tuple[dict[str, int], dict[str, int], dict[str, int]]:
     global seen, duplicates
     bases = defaultdict(int)
     models = defaultdict(int)
@@ -118,7 +129,7 @@ register_hook("nodes.json v1", SCHEMA_NODESJSONV1, parse_nodes_json_v1)
 register_hook("nodes.json v2", SCHEMA_NODESJSONV2, parse_nodes_json_v2)
 
 
-def download(url, timeout=5):
+def download(url: str, timeout: float = 5) -> requests.models.Response:
     try:
         response = requests.get(url, timeout=timeout)
     except requests.exceptions.RequestException as ex:
@@ -134,7 +145,7 @@ def download(url, timeout=5):
     return response
 
 
-def load(url):
+def load(url: str) -> tuple[dict[str, int], dict[str, int], dict[str, int]]:
     response = download(url)
     if not response:
         raise ValueError("No response for HTTP request")
@@ -156,7 +167,9 @@ def load(url):
     raise ValueError("No parser found")
 
 
-def named_load(name_url_tuple):
+def named_load(
+    name_url_tuple: tuple[str, str],
+) -> tuple[str, tuple[dict[str, int], dict[str, int], dict[str, int]]]:
     community_name, url = name_url_tuple
     try:
         result = load(url)
@@ -171,7 +184,7 @@ def named_load(name_url_tuple):
 
 @click.command(short_help="Collect census information")
 @click.argument("outfile", default="./gluon-census.prom")
-def main(outfile):
+def main(outfile: str) -> None:
     registry = CollectorRegistry()
     metric_gluon_version_total = Gauge(
         "gluon_base_total",
