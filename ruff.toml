@@ -1,7 +1,6 @@
 [lint]
 select = ["ALL"]
 ignore = [
-"BLE",
 "C",
 "COM",
 "D",
