@@ -217,9 +217,9 @@ def main(outfile):
                     community=community, version=version, base=base
                 ).inc(sum)
             for model, sum in models.items():
-                metric_gluon_model_total.labels(
-                    community=community, model=model
-                ).inc(sum)
+                metric_gluon_model_total.labels(community=community, model=model).inc(
+                    sum
+                )
             for domain, sum in domains.items():
                 metric_gluon_domain_total.labels(
                     community=community, domain=domain
