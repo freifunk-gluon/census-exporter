@@ -3,7 +3,6 @@ target-version = "py312"
 [lint]
 select = ["ALL"]
 ignore = [
-"BLE",
 "C",
 "COM",
 "D",

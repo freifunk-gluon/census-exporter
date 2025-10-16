@@ -195,7 +195,7 @@ def named_load(
         import sys
 
         sys.exit(1)
-    except BaseException as ex:
+    except Exception:  # noqa: BLE001
         return (community_name, None)
     return (community_name, result)
 
