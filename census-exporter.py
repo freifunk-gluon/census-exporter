@@ -4,9 +4,7 @@ import json
 import re
 from collections import defaultdict
 from collections.abc import Callable
-from functools import reduce
 from multiprocessing.pool import ThreadPool
-from operator import getitem
 
 import click
 import requests
@@ -70,7 +68,7 @@ def parse_meshviewer(
             models[model] += 1
             domain = node["domain"]
             domains[domain] += 1
-        except KeyError as ex:
+        except KeyError:
             continue
     return bases, models, domains
 
@@ -86,7 +84,7 @@ def parse_nodes_json_v1(
             continue
         try:
             base = node["nodeinfo"]["software"]["firmware"]["base"]
-        except KeyError as ex:
+        except KeyError:
             continue
         seen.add(node_id)
         match = version_pattern.match(base)
@@ -117,7 +115,7 @@ def parse_nodes_json_v2(
             models[model] += 1
             domain = node["nodeinfo"]["system"]["domain_code"]
             domains[domain] += 1
-        except KeyError as ex:
+        except KeyError:
             continue
 
     return bases, models, domains
@@ -142,7 +140,8 @@ def download(url: str, timeout: float = 5) -> requests.models.Response:
             status_code=response.status_code,
             url=url,
         )
-        raise ex
+        msg = "Unexpected HTTP status code"
+        raise ValueError(msg)
 
     return response
 
@@ -164,7 +163,7 @@ def load(url: str) -> tuple[dict[str, int], dict[str, int], dict[str, int]]:
             format_set["schema"](data)
             print(f"{name}\t{url}")
             return format_set["parser"](data)
-        except (Invalid, MultipleInvalid) as ex:
+        except (Invalid, MultipleInvalid):
             pass
 
     msg = "No parser found"

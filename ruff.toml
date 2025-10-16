@@ -4,7 +4,6 @@ ignore = [
 "D",
 "D203",
 "D213",
-"F",
 "PERF",
 "PLR",
 "PLW",
