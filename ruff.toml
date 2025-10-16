@@ -6,9 +6,6 @@ ignore = [
 "D",
 "D203",  # incomaptible to D211
 "D213",  # incompatible to D212
-"PERF",
-"PLC",
-"PLR",
 "PLW",
 "PTH",
 "T",

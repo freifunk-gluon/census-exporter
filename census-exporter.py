@@ -152,7 +152,7 @@ def download(url: str, timeout: float = 5) -> requests.models.Response:
         log.msg("Exception caught while fetching url", ex=ex)
         raise ex
 
-    if response.status_code != 200:
+    if response.status_code != requests.codes.ok:
         log.msg(
             "Unexpected HTTP status code",
             status_code=response.status_code,
