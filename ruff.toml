@@ -3,7 +3,6 @@ target-version = "py312"
 [lint]
 select = ["ALL"]
 ignore = [
-"C",
 "COM",
 "D",
 "D203",  # incomaptible to D211
