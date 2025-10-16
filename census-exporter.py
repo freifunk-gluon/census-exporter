@@ -5,6 +5,7 @@ import re
 from collections import defaultdict
 from collections.abc import Callable
 from multiprocessing.pool import ThreadPool
+from pathlib import Path
 
 import click
 import requests
@@ -208,7 +209,7 @@ def main(outfile: str) -> None:
         registry=registry,
     )
 
-    with open("./communities.json") as handle:
+    with Path("./communities.json").open() as handle:
         communities = json.load(handle)
 
     fetchlist = [
