@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 
 import json
-import click
 import re
-import requests
-import structlog
-from voluptuous import Schema, Invalid, MultipleInvalid
 from collections import defaultdict
 from functools import reduce
 from operator import getitem
-from prometheus_client import CollectorRegistry, Gauge, write_to_textfile
 
+import click
+import requests
+import structlog
+from prometheus_client import CollectorRegistry, Gauge, write_to_textfile
+from voluptuous import Invalid, MultipleInvalid, Schema
 
 log = structlog.get_logger()
 
