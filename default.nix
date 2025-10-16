@@ -8,10 +8,12 @@ stdenv.mkDerivation {
     black
     click
     colorama
+    mypy
     prometheus_client
     requests
     ruff
     structlog
+    types-requests
     voluptuous
   ];
 }

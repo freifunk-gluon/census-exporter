@@ -1,17 +1,25 @@
 #!/usr/bin/env python3
 
+from __future__ import annotations
+
 import json
 import re
 from collections import defaultdict
+from dataclasses import dataclass
 from functools import reduce
 from multiprocessing.pool import ThreadPool
 from operator import getitem
+from typing import TYPE_CHECKING
 
 import click
 import requests
 import structlog
 from prometheus_client import CollectorRegistry, Gauge, write_to_textfile
 from voluptuous import Invalid, MultipleInvalid, Schema
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
 
 log = structlog.get_logger()
 
@@ -33,18 +41,29 @@ SCHEMA_NODESJSONV1 = Schema({"timestamp": str, "version": 1, "nodes": dict})
 
 SCHEMA_NODESJSONV2 = Schema({"timestamp": str, "version": 2, "nodes": [dict]})
 
-FORMATS = {}
+FORMATS: dict[str, Format] = {}
 
 
-def normalize_model_name(name):
+@dataclass
+class Format:
+    name: str
+    schema: Schema
+    parser: Callable[[dict], tuple[dict[str, int], dict[str, int], dict[str, int]]]
+
+
+def normalize_model_name(name: str) -> str:
     return re.sub(r"\s+", " ", name)
 
 
-def register_hook(name, schema, parser):
-    FORMATS[name] = {"schema": schema, "parser": parser}
+def register_hook(
+    name: str,
+    schema: Schema,
+    parser: Callable[[dict], tuple[dict[str, int], dict[str, int], dict[str, int]]],
+) -> None:
+    FORMATS[name] = Format(name=name, schema=schema, parser=parser)
 
 
-def already_seen(node_id):
+def already_seen(node_id: str) -> bool:
     global duplicates, seen
     if node_id in seen:
         duplicates += 1
@@ -53,10 +72,13 @@ def already_seen(node_id):
     return False
 
 
-def parse_meshviewer(data):
-    bases = defaultdict(int)
-    models = defaultdict(int)
-    domains = defaultdict(int)
+def parse_meshviewer(
+    data: dict,
+) -> tuple[dict[str, int], dict[str, int], dict[str, int]]:
+    global seen, duplicates
+    bases: dict[str, int] = defaultdict(int)
+    models: dict[str, int] = defaultdict(int)
+    domains: dict[str, int] = defaultdict(int)
     for node in data["nodes"]:
         try:
             node_id = node["node_id"]
@@ -75,8 +97,11 @@ def parse_meshviewer(data):
     return bases, models, domains
 
 
-def parse_nodes_json_v1(data, *kwargs):
-    bases = defaultdict(int)
+def parse_nodes_json_v1(
+    data: dict,
+) -> tuple[dict[str, int], dict[str, int], dict[str, int]]:
+    global seen, duplicates
+    bases: dict[str, int] = defaultdict(int)
     for node_id, node in data["nodes"].items():
         if already_seen(node_id):
             continue
@@ -90,10 +115,13 @@ def parse_nodes_json_v1(data, *kwargs):
     return bases, dict(), dict()
 
 
-def parse_nodes_json_v2(data, *kwargs):
-    bases = defaultdict(int)
-    models = defaultdict(int)
-    domains = defaultdict(int)
+def parse_nodes_json_v2(
+    data: dict,
+) -> tuple[dict[str, int], dict[str, int], dict[str, int]]:
+    global seen, duplicates
+    bases: dict[str, int] = defaultdict(int)
+    models: dict[str, int] = defaultdict(int)
+    domains: dict[str, int] = defaultdict(int)
     for node in data["nodes"]:
         try:
             node_id = node["nodeinfo"]["node_id"]
@@ -119,7 +147,7 @@ register_hook("nodes.json v1", SCHEMA_NODESJSONV1, parse_nodes_json_v1)
 register_hook("nodes.json v2", SCHEMA_NODESJSONV2, parse_nodes_json_v2)
 
 
-def download(url, timeout=5):
+def download(url: str, timeout: float = 5) -> requests.models.Response:
     try:
         response = requests.get(url, timeout=timeout)
     except requests.exceptions.RequestException as ex:
@@ -130,12 +158,12 @@ def download(url, timeout=5):
         log.msg(
             "Unexpected HTTP status code", status_code=response.status_code, url=url
         )
-        raise ex
+        raise RuntimeError("Unexpected HTTP status code")
 
     return response
 
 
-def load(url):
+def load(url: str) -> tuple[dict[str, int], dict[str, int], dict[str, int]]:
     response = download(url)
     if not response:
         raise ValueError("No response for HTTP request")
@@ -148,16 +176,18 @@ def load(url):
 
     for name, format_set in FORMATS.items():
         try:
-            format_set["schema"](data)
+            format_set.schema(data)
             print(f"{name}\t{url}")
-            return format_set["parser"](data)
+            return format_set.parser(data)
         except (Invalid, MultipleInvalid) as ex:
             pass
 
     raise ValueError("No parser found")
 
 
-def named_load(name_url_tuple):
+def named_load(
+    name_url_tuple: tuple[str, str],
+) -> tuple[str, tuple[dict[str, int], dict[str, int], dict[str, int]] | None]:
     community_name, url = name_url_tuple
     try:
         result = load(url)
@@ -172,7 +202,7 @@ def named_load(name_url_tuple):
 
 @click.command(short_help="Collect census information")
 @click.argument("outfile", default="./gluon-census.prom")
-def main(outfile):
+def main(outfile: str) -> None:
     registry = CollectorRegistry()
     metric_gluon_version_total = Gauge(
         "gluon_base_total",
@@ -204,11 +234,16 @@ def main(outfile):
 
     for community, result in results:
         try:
+            if result is None:
+                continue
             versions, models, domains = result
         except TypeError:
             continue
         for version, version_sum in versions.items():
             match = BASE_PATTERN.match(version)
+            if match is None:
+                msg = "Could not match version"
+                raise ValueError(msg)
             base = match.group("base")
             metric_gluon_version_total.labels(
                 community=community, version=version, base=base
