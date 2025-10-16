@@ -160,7 +160,8 @@ def download(url: str, timeout: float = 5) -> requests.models.Response:
             status_code=response.status_code,
             url=url,
         )
-        raise RuntimeError("Unexpected HTTP status code")
+        msg = "Unexpected HTTP status code"
+        raise RuntimeError(msg)
 
     return response
 
@@ -168,7 +169,8 @@ def download(url: str, timeout: float = 5) -> requests.models.Response:
 def load(url: str) -> tuple[dict[str, int], dict[str, int], dict[str, int]]:
     response = download(url)
     if not response:
-        raise ValueError("No response for HTTP request")
+        msg = "No response for HTTP request"
+        raise ValueError(msg)
 
     try:
         data = response.json()
@@ -184,7 +186,8 @@ def load(url: str) -> tuple[dict[str, int], dict[str, int], dict[str, int]]:
         except (Invalid, MultipleInvalid) as ex:
             pass
 
-    raise ValueError("No parser found")
+    msg = "No parser found"
+    raise ValueError(msg)
 
 
 def named_load(
