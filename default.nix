@@ -10,6 +10,7 @@ stdenv.mkDerivation {
     colorama
     prometheus_client
     requests
+    ruff
     structlog
     voluptuous
   ];

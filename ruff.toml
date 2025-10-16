@@ -1,0 +1,27 @@
+[lint]
+select = ["ALL"]
+ignore = [
+"A",
+"ANN",
+"ARG",
+"BLE",
+"C",
+"COM",
+"D",
+"D203",  # incomaptible to D211
+"D213",  # incompatible to D212
+"EM",
+"F",
+"PERF",
+"PLC",
+"PLR",
+"PLW",
+"PTH",
+"T",
+"TRY",
+]
+
+[lint.per-file-ignores]
+"tests/*" = [
+"S101",  # pytest provides assert introspection
+]

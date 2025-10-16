@@ -8,3 +8,4 @@ voluptuous
 
 # test requirements
 pytest
+ruff
