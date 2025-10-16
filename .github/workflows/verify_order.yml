@@ -1,0 +1,19 @@
+name: Verify order
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+jobs:
+  order:
+    name: order communities.json
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Order json by keys
+        run: jq -S . communities.json > sorted_communities.json
+      - name: Verfy commited json is ordered
+        run: diff communities.json sorted_communities.json
