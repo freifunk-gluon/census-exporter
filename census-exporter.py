@@ -146,11 +146,11 @@ def load(url):
         log.msg("Exception caught while processing url", url=url, ex=ex)
         raise ex
 
-    for name, format in FORMATS.items():
+    for name, format_set in FORMATS.items():
         try:
-            format["schema"](data)
+            format_set["schema"](data)
             print(f"{name}\t{url}")
-            return format["parser"](data)
+            return format_set["parser"](data)
         except (Invalid, MultipleInvalid) as ex:
             pass
 
@@ -207,17 +207,19 @@ def main(outfile):
             versions, models, domains = result
         except TypeError:
             continue
-        for version, sum in versions.items():
+        for version, version_sum in versions.items():
             match = BASE_PATTERN.match(version)
             base = match.group("base")
             metric_gluon_version_total.labels(
                 community=community, version=version, base=base
-            ).inc(sum)
-        for model, sum in models.items():
-            metric_gluon_model_total.labels(community=community, model=model).inc(sum)
-        for domain, sum in domains.items():
+            ).inc(version_sum)
+        for model, model_sum in models.items():
+            metric_gluon_model_total.labels(community=community, model=model).inc(
+                model_sum
+            )
+        for domain, domain_sum in domains.items():
             metric_gluon_domain_total.labels(community=community, domain=domain).inc(
-                sum
+                domain_sum
             )
 
     write_to_textfile(outfile, registry)
