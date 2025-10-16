@@ -4,6 +4,7 @@ import json
 import re
 from collections import defaultdict
 from functools import reduce
+from multiprocessing.pool import ThreadPool
 from operator import getitem
 
 import click
@@ -174,6 +175,19 @@ def load(url):
     raise ValueError("No parser found")
 
 
+def named_load(name_url_tuple):
+    community_name, url = name_url_tuple
+    try:
+        result = load(url)
+    except KeyboardInterrupt:
+        import sys
+
+        sys.exit(1)
+    except BaseException as ex:
+        return (community_name, None)
+    return (community_name, result)
+
+
 @click.command(short_help="Collect census information")
 @click.argument("outfile", default="./gluon-census.prom")
 def main(outfile):
@@ -200,30 +214,29 @@ def main(outfile):
     with open("./communities.json") as handle:
         communities = json.load(handle)
 
-    for community, urls in communities.items():
-        for url in urls:
-            try:
-                versions, models, domains = load(url)
-            except KeyboardInterrupt:
-                import sys
+    fetchlist = [
+        (community, url) for community, urls in communities.items() for url in urls
+    ]
 
-                sys.exit(1)
-            except BaseException as ex:
-                continue
-            for version, sum in versions.items():
-                match = base_pattern.match(version)
-                base = match.group("base")
-                metric_gluon_version_total.labels(
-                    community=community, version=version, base=base
-                ).inc(sum)
-            for model, sum in models.items():
-                metric_gluon_model_total.labels(community=community, model=model).inc(
-                    sum
-                )
-            for domain, sum in domains.items():
-                metric_gluon_domain_total.labels(
-                    community=community, domain=domain
-                ).inc(sum)
+    results = ThreadPool(16).imap_unordered(named_load, fetchlist)
+
+    for community, result in results:
+        try:
+            versions, models, domains = result
+        except TypeError:
+            continue
+        for version, sum in versions.items():
+            match = base_pattern.match(version)
+            base = match.group("base")
+            metric_gluon_version_total.labels(
+                community=community, version=version, base=base
+            ).inc(sum)
+        for model, sum in models.items():
+            metric_gluon_model_total.labels(community=community, model=model).inc(sum)
+        for domain, sum in domains.items():
+            metric_gluon_domain_total.labels(community=community, domain=domain).inc(
+                sum
+            )
 
     write_to_textfile(outfile, registry)
 
