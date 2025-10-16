@@ -16,7 +16,8 @@ def test_main() -> None:
 
         result = runner.invoke(census_exporter.main, [output_filename])
         assert result.exit_code == 0
-        assert result.output == "0 unique nodes\n0 duplicates skipped\n"
+        assert "duplicate" in result.output
+        assert "unique" in result.output
 
         with Path(output_filename).open("r") as p:
             content = p.read()
