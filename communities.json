@@ -154,9 +154,6 @@
   "Mainz/Wiesbaden": [
     "https://map.freifunk-mwu.de/data/meshviewer.json"
   ],
-  "Malmö": [
-    "http://gateway-01.mesh.pjodd.se/hopglass/nodes.json"
-  ],
   "Marburg": [
     "https://api.marburg.freifunk.net/nodes.json"
   ],
