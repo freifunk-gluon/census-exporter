@@ -7,6 +7,7 @@ import re
 from collections import defaultdict
 from dataclasses import dataclass
 from multiprocessing.pool import ThreadPool
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import click
@@ -226,7 +227,7 @@ def main(outfile: str) -> None:
         registry=registry,
     )
 
-    with open("./communities.json") as handle:
+    with Path("./communities.json").open() as handle:
         communities = json.load(handle)
 
     fetchlist = [
