@@ -151,7 +151,7 @@ def download(url: str, timeout: float = 5) -> requests.models.Response:
         response = requests.get(url, timeout=timeout)
     except requests.exceptions.RequestException as ex:
         log.msg("Exception caught while fetching url", ex=ex)
-        raise ex
+        raise
 
     if response.status_code != requests.codes.ok:
         log.msg(
@@ -175,7 +175,7 @@ def load(url: str) -> tuple[dict[str, int], dict[str, int], dict[str, int]]:
         data = response.json()
     except ValueError as ex:
         log.msg("Exception caught while processing url", url=url, ex=ex)
-        raise ex
+        raise
 
     for name, format_set in FORMATS.items():
         try:
