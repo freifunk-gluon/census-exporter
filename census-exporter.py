@@ -6,9 +6,7 @@ import json
 import re
 from collections import defaultdict
 from dataclasses import dataclass
-from functools import reduce
 from multiprocessing.pool import ThreadPool
-from operator import getitem
 from typing import TYPE_CHECKING
 
 import click
@@ -92,7 +90,7 @@ def parse_meshviewer(
             models[model] += 1
             domain = node["domain"]
             domains[domain] += 1
-        except KeyError as ex:
+        except KeyError:
             continue
     return bases, models, domains
 
@@ -107,7 +105,7 @@ def parse_nodes_json_v1(
             continue
         try:
             base = node["nodeinfo"]["software"]["firmware"]["base"]
-        except KeyError as ex:
+        except KeyError:
             continue
         match = VERSION_PATTERN.match(base)
         if match:
@@ -135,7 +133,7 @@ def parse_nodes_json_v2(
             models[model] += 1
             domain = node["nodeinfo"]["system"]["domain_code"]
             domains[domain] += 1
-        except KeyError as ex:
+        except KeyError:
             continue
 
     return bases, models, domains
@@ -183,7 +181,7 @@ def load(url: str) -> tuple[dict[str, int], dict[str, int], dict[str, int]]:
             format_set.schema(data)
             print(f"{name}\t{url}")
             return format_set.parser(data)
-        except (Invalid, MultipleInvalid) as ex:
+        except (Invalid, MultipleInvalid):
             pass
 
     msg = "No parser found"
