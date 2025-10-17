@@ -1,0 +1,14 @@
+name: Check Dependencies
+
+on:
+  pull_request:
+    paths:
+      - 'pyproject.toml'
+      - 'uv.lock'
+
+jobs:
+  verify-uv-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hbelmiro/uv-lock-check@v0.2.0
