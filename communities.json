@@ -74,9 +74,6 @@
   "Emskirchen": [
     "https://karte.freifunk-emskirchen.de/data/nodes.json"
   ],
-  "Ennepe-Ruhr": [
-    "https://karte.ff-en.de/data/meshviewer.json"
-  ],
   "Erfurt": [
     "https://map.erfurt.freifunk.net/meshviewer/data/meshviewer.json"
   ],
