@@ -2,6 +2,7 @@
 
 import json
 import re
+import sys
 from collections import defaultdict
 from collections.abc import Callable
 from multiprocessing.pool import ThreadPool
@@ -178,8 +179,6 @@ def named_load(
     try:
         result = load(url)
     except KeyboardInterrupt:
-        import sys
-
         sys.exit(1)
     except Exception:  # noqa: BLE001
         return (community_name, None)
