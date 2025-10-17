@@ -15,12 +15,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Install Dependencies
-        run: sudo apt-get install python3-setuptools && python3 -m pip install -r requirements.txt
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+      - name: Install gluon-census-exporter
+        run: uv sync
       - name: Create output directory
         run: mkdir out
       - name: Build
-        run: ./census-exporter.py out/gluon-census.prom
+        run: uv run gluon-census-exporter out/gluon-census.prom
       - name: Archive output
         uses: actions/upload-artifact@v4
         with:

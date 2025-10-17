@@ -1,6 +1,0 @@
-click
-colorama
-prometheus_client
-requests
-structlog
-voluptuous
