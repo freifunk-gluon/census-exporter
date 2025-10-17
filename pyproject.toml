@@ -1,0 +1,49 @@
+[project]
+name = "gluon-census-exporter"
+version = "2025.10.17"
+description = "Prometheus exporter for census data of Gluon communities"
+readme = "README.md"
+authors = [
+    { name = "Martin Weinelt", email = "hexa@darmstadt.ccc.de"},
+    { name = "Jan-Niklas Burfeind", email = "git@aiyionpri.me" }
+]
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = [
+    "click>=8.3.0",
+    "prometheus-client>=0.23.1",
+    "requests>=2.32.5",
+    "structlog>=25.4.0",
+    "voluptuous>=0.15.2",
+]
+
+[project.scripts]
+gluon-census-exporter = "gluon_census_exporter.__main__:main"
+
+[build-system]
+requires = ["uv_build>=0.7.22,<0.8"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "black>=25.9.0",
+    "isort>=7.0.0",
+    "mypy>=1.18.2",
+    "pytest>=8.4.2",
+    "ruff>=0.14.1",
+    "types-requests>=2.32.4.20250913",
+]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+"D",
+"D203",  # incomaptible to D211
+"D213",  # incompatible to D212
+"PLW",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+"S101",  # pytest provides assert introspection
+]

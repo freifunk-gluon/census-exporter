@@ -1,9 +1,8 @@
-import importlib
 from pathlib import Path
 
 from click.testing import CliRunner
 
-census_exporter = importlib.import_module("census-exporter")
+from gluon_census_exporter.__main__ import main
 
 
 def test_main() -> None:
@@ -14,7 +13,7 @@ def test_main() -> None:
         with Path("communities.json").open("w") as f:
             f.write("{}")
 
-        result = runner.invoke(census_exporter.main, [output_filename])
+        result = runner.invoke(main, [output_filename])
         assert result.exit_code == 0
         assert "duplicate" in result.output
         assert "unique" in result.output
