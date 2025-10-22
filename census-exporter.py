@@ -44,19 +44,25 @@ def register_hook(name, schema, parser):
     FORMATS[name] = {"schema": schema, "parser": parser}
 
 
+def already_seen(node_id):
+    global duplicates, seen
+    if node_id in seen:
+        duplicates += 1
+        return True
+    seen.add(node_id)
+    return False
+
+
 def parse_meshviewer(data):
-    global seen, duplicates
     bases = defaultdict(int)
     models = defaultdict(int)
     domains = defaultdict(int)
     for node in data["nodes"]:
         try:
             node_id = node["node_id"]
-            if node_id in seen:
-                duplicates += 1
+            if already_seen(node_id):
                 continue
             base = node["firmware"]["base"]
-            seen.add(node_id)
             match = VERSION_PATTERN.match(base)
             if match:
                 bases[match.group("version")] += 1
@@ -70,17 +76,14 @@ def parse_meshviewer(data):
 
 
 def parse_nodes_json_v1(data, *kwargs):
-    global seen, duplicates
     bases = defaultdict(int)
     for node_id, node in data["nodes"].items():
-        if node_id in seen:
-            duplicates += 1
+        if already_seen(node_id):
             continue
         try:
             base = node["nodeinfo"]["software"]["firmware"]["base"]
         except KeyError as ex:
             continue
-        seen.add(node_id)
         match = VERSION_PATTERN.match(base)
         if match:
             bases[match.group("version")] += 1
@@ -88,18 +91,15 @@ def parse_nodes_json_v1(data, *kwargs):
 
 
 def parse_nodes_json_v2(data, *kwargs):
-    global seen, duplicates
     bases = defaultdict(int)
     models = defaultdict(int)
     domains = defaultdict(int)
     for node in data["nodes"]:
         try:
             node_id = node["nodeinfo"]["node_id"]
-            if node_id in seen:
-                duplicates += 1
+            if already_seen(node_id):
                 continue
             base = node["nodeinfo"]["software"]["firmware"]["base"]
-            seen.add(node_id)
             match = VERSION_PATTERN.match(base)
             if match:
                 bases[match.group("version")] += 1
