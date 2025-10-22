@@ -15,8 +15,9 @@ from voluptuous import Invalid, MultipleInvalid, Schema
 
 log = structlog.get_logger()
 
-version_pattern = re.compile(r"^(?P<version>gluon-v\d{4}\.\d(?:\.\d)?(?:-\d+)?).*")
-base_pattern = re.compile(r"^(?P<base>gluon-v\d{4}\.\d(?:\.\d)?).*")
+VERSION_PATTERN = re.compile(r"^(?P<version>gluon-v\d{4}\.\d(?:\.\d)?(?:-\d+)?).*")
+BASE_PATTERN = re.compile(r"^(?P<base>gluon-v\d{4}\.\d(?:\.\d)?).*")
+
 seen = set()
 duplicates = 0
 
@@ -56,7 +57,7 @@ def parse_meshviewer(data):
                 continue
             base = node["firmware"]["base"]
             seen.add(node_id)
-            match = version_pattern.match(base)
+            match = VERSION_PATTERN.match(base)
             if match:
                 bases[match.group("version")] += 1
             model = normalize_model_name(node["model"])
@@ -80,7 +81,7 @@ def parse_nodes_json_v1(data, *kwargs):
         except KeyError as ex:
             continue
         seen.add(node_id)
-        match = version_pattern.match(base)
+        match = VERSION_PATTERN.match(base)
         if match:
             bases[match.group("version")] += 1
     return bases, dict(), dict()
@@ -99,7 +100,7 @@ def parse_nodes_json_v2(data, *kwargs):
                 continue
             base = node["nodeinfo"]["software"]["firmware"]["base"]
             seen.add(node_id)
-            match = version_pattern.match(base)
+            match = VERSION_PATTERN.match(base)
             if match:
                 bases[match.group("version")] += 1
             model = normalize_model_name(node["nodeinfo"]["hardware"]["model"])
@@ -207,7 +208,7 @@ def main(outfile):
         except TypeError:
             continue
         for version, sum in versions.items():
-            match = base_pattern.match(version)
+            match = BASE_PATTERN.match(version)
             base = match.group("base")
             metric_gluon_version_total.labels(
                 community=community, version=version, base=base
