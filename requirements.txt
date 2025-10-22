@@ -1,6 +1,10 @@
+# requirements
 click
 colorama
 prometheus_client
 requests
 structlog
 voluptuous
+
+# test requirements
+pytest
