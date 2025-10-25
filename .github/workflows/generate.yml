@@ -24,7 +24,7 @@ jobs:
       - name: Build
         run: uv run gluon-census-exporter out/gluon-census.prom
       - name: Archive output
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: census-output
           path: out
