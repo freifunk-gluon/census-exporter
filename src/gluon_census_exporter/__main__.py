@@ -45,10 +45,17 @@ FORMATS: dict[str, Format] = {}
 
 
 @dataclass
+class ParseResult:
+    bases: dict[str, int]
+    models: dict[str, int]
+    domains: dict[str, int]
+
+
+@dataclass
 class Format:
     name: str
     schema: Schema
-    parser: Callable[[dict], tuple[dict[str, int], dict[str, int], dict[str, int]]]
+    parser: Callable[[dict], ParseResult]
 
 
 def normalize_model_name(name: str) -> str:
@@ -58,7 +65,7 @@ def normalize_model_name(name: str) -> str:
 def register_hook(
     name: str,
     schema: Schema,
-    parser: Callable[[dict], tuple[dict[str, int], dict[str, int], dict[str, int]]],
+    parser: Callable[[dict], ParseResult],
 ) -> None:
     FORMATS[name] = Format(name=name, schema=schema, parser=parser)
 
@@ -74,7 +81,7 @@ def already_seen(node_id: str) -> bool:
 
 def parse_meshviewer(
     data: dict,
-) -> tuple[dict[str, int], dict[str, int], dict[str, int]]:
+) -> ParseResult:
     global seen, duplicates
     bases: dict[str, int] = defaultdict(int)
     models: dict[str, int] = defaultdict(int)
@@ -94,12 +101,12 @@ def parse_meshviewer(
             domains[domain] += 1
         except KeyError:
             continue
-    return bases, models, domains
+    return ParseResult(bases, models, domains)
 
 
 def parse_nodes_json_v1(
     data: dict,
-) -> tuple[dict[str, int], dict[str, int], dict[str, int]]:
+) -> ParseResult:
     global seen, duplicates
     bases: dict[str, int] = defaultdict(int)
     for node_id, node in data["nodes"].items():
@@ -112,12 +119,12 @@ def parse_nodes_json_v1(
         match = VERSION_PATTERN.match(base)
         if match:
             bases[match.group("version")] += 1
-    return bases, {}, {}
+    return ParseResult(bases, {}, {})
 
 
 def parse_nodes_json_v2(
     data: dict,
-) -> tuple[dict[str, int], dict[str, int], dict[str, int]]:
+) -> ParseResult:
     global seen, duplicates
     bases: dict[str, int] = defaultdict(int)
     models: dict[str, int] = defaultdict(int)
@@ -138,7 +145,7 @@ def parse_nodes_json_v2(
         except KeyError:
             continue
 
-    return bases, models, domains
+    return ParseResult(bases, models, domains)
 
 
 register_hook("meshviewer", SCHEMA_MESHVIEWER, parse_meshviewer)
@@ -166,7 +173,7 @@ def download(url: str, timeout: float = 5) -> requests.models.Response:
     return response
 
 
-def load(url: str) -> tuple[dict[str, int], dict[str, int], dict[str, int]]:
+def load(url: str) -> ParseResult:
     response = download(url)
     if not response:
         msg = "No response for HTTP request"
@@ -192,7 +199,7 @@ def load(url: str) -> tuple[dict[str, int], dict[str, int], dict[str, int]]:
 
 def named_load(
     name_url_tuple: tuple[str, str],
-) -> tuple[str, tuple[dict[str, int], dict[str, int], dict[str, int]] | None]:
+) -> tuple[str, ParseResult | None]:
     community_name, url = name_url_tuple
     try:
         result = load(url)
@@ -239,10 +246,9 @@ def main(outfile: str) -> None:
         try:
             if result is None:
                 continue
-            versions, models, domains = result
         except TypeError:
             continue
-        for version, version_sum in versions.items():
+        for version, version_sum in result.bases.items():
             match = BASE_PATTERN.match(version)
             if match is None:
                 msg = "Could not match version"
@@ -253,11 +259,11 @@ def main(outfile: str) -> None:
                 version=version,
                 base=base,
             ).inc(version_sum)
-        for model, model_sum in models.items():
+        for model, model_sum in result.models.items():
             metric_gluon_model_total.labels(community=community, model=model).inc(
                 model_sum,
             )
-        for domain, domain_sum in domains.items():
+        for domain, domain_sum in result.domains.items():
             metric_gluon_domain_total.labels(community=community, domain=domain).inc(
                 domain_sum,
             )
