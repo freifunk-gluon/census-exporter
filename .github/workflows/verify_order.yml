@@ -12,7 +12,7 @@ jobs:
     name: order communities.json
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6.0.1
       - name: Order json by keys
         run: jq -S . communities.json > sorted_communities.json
       - name: Verfy commited json is ordered
