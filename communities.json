@@ -173,7 +173,7 @@
     "https://map.ffmuc.net/data/meshviewer.json"
   ],
   "Münsterland": [
-    "https://karte.freifunk-muensterland.de/data/nodes.json"
+    "https://meshviewer.freifunk-muensterland.de/data/meshviewer.json"
   ],
   "Neuendettelsau": [
     "https://karte.freifunk-neuendettelsau.de/data/nodes.json"
