@@ -107,7 +107,7 @@ FORMATS: dict[str, Format] = {}
 class ParseResult:
     bases: dict[str, int]
     models: dict[str, int]
-    domains: dict[str, int]
+    domains: dict[tuple[str, str], int]
 
 
 @dataclass
@@ -144,7 +144,7 @@ def parse_meshviewer(
     global seen, duplicates
     bases: dict[str, int] = defaultdict(int)
     models: dict[str, int] = defaultdict(int)
-    domains: dict[str, int] = defaultdict(int)
+    domains: dict[tuple[str, str], int] = defaultdict(int)
     for node in data["nodes"]:
         try:
             node_id = node["node_id"]
@@ -158,8 +158,12 @@ def parse_meshviewer(
             bases[version] += 1
             model = normalize_model_name(node["model"])
             models[model] += 1
-            domain = node["domain"]
-            domains[domain] += 1
+            try:
+                domain = node["domain"]
+            except KeyError:
+                domain = ""
+            site = ""
+            domains[(site, domain)] += 1
         except KeyError:
             continue
     return ParseResult(bases, models, domains)
@@ -189,7 +193,7 @@ def parse_nodes_json_v2(
     global seen, duplicates
     bases: dict[str, int] = defaultdict(int)
     models: dict[str, int] = defaultdict(int)
-    domains: dict[str, int] = defaultdict(int)
+    domains: dict[tuple[str, str], int] = defaultdict(int)
     for node in data["nodes"]:
         try:
             node_id = node["nodeinfo"]["node_id"]
@@ -204,8 +208,15 @@ def parse_nodes_json_v2(
                 bases[version] += 1
             model = normalize_model_name(node["nodeinfo"]["hardware"]["model"])
             models[model] += 1
-            domain = node["nodeinfo"]["system"]["domain_code"]
-            domains[domain] += 1
+            try:
+                domain = node["nodeinfo"]["system"]["domain_code"]
+            except KeyError:
+                domain = ""
+            try:
+                site = node["nodeinfo"]["system"]["site_code"]
+            except KeyError:
+                site = ""
+            domains[(site, domain)] += 1
         except KeyError:
             continue
 
@@ -293,7 +304,7 @@ def main(outfile: str) -> None:
     metric_gluon_domain_total = Gauge(
         "gluon_domain_total",
         "Number of unique nodes on a specific Gluon domain",
-        ["community", "domain"],
+        ["community", "site", "domain"],
         registry=registry,
     )
 
@@ -330,8 +341,12 @@ def main(outfile: str) -> None:
             metric_gluon_model_total.labels(community=community, model=model).inc(
                 model_sum,
             )
-        for domain, domain_sum in result.domains.items():
-            metric_gluon_domain_total.labels(community=community, domain=domain).inc(
+        for (site, domain), domain_sum in result.domains.items():
+            metric_gluon_domain_total.labels(
+                community=community,
+                site=site,
+                domain=domain,
+            ).inc(
                 domain_sum,
             )
 
