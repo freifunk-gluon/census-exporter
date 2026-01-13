@@ -52,6 +52,11 @@ PATTERNS: list[PatternDef] = [
         "vtype": "gluon-custom",
     },
     {
+        "version": re.compile(r"^(?P<version>)$"),
+        "base": re.compile(r"^(?P<base>)$"),
+        "vtype": "undefined",
+    },
+    {
         "version": re.compile(r"^(?P<version>.*)"),
         "base": re.compile(r"^(?P<base>.*)"),
         "vtype": "foreign",
@@ -60,20 +65,24 @@ PATTERNS: list[PatternDef] = [
 
 
 def get_version(pattern: str) -> str:
+    if pattern is None:
+        return ""
     for pidx in PATTERNS:
         match = pidx["version"].match(pattern)
         if match:
             return match.group("version")
-    return None
+    return ""
 
 
 def get_base_version(pattern: str) -> tuple[str, str]:
+    if pattern is None:
+        return ("", "undefined")
     for pidx in PATTERNS:
         match = pidx["base"].match(pattern)
         if match:
             res = match.group("base")
             return (res, pidx["vtype"])
-    return (None, None)
+    return ("", "undefined")
 
 
 seen = set()
@@ -148,10 +157,12 @@ def parse_meshviewer(
             node_id = node["node_id"]
             if already_seen(node_id):
                 continue
-            base = node["firmware"]["base"]
+            try:
+                base = node["firmware"]["base"]
+            except KeyError:
+                base = None
             version = get_version(base)
-            if version:
-                result.bases[version] += 1
+            result.bases[version] += 1
             model = normalize_model_name(node["model"])
             result.models[model] += 1
             domain = node["domain"]
@@ -171,10 +182,9 @@ def parse_nodes_json_v1(
         try:
             base = node["nodeinfo"]["software"]["firmware"]["base"]
         except KeyError:
-            continue
+            base = None
         version = get_version(base)
-        if version:
-            result.bases[version] += 1
+        result.bases[version] += 1
     return result
 
 
@@ -187,10 +197,12 @@ def parse_nodes_json_v2(
             node_id = node["nodeinfo"]["node_id"]
             if already_seen(node_id):
                 continue
-            base = node["nodeinfo"]["software"]["firmware"]["base"]
+            try:
+                base = node["nodeinfo"]["software"]["firmware"]["base"]
+            except KeyError:
+                base = None
             version = get_version(base)
-            if version:
-                result.bases[version] += 1
+            result.bases[version] += 1
             model = normalize_model_name(node["nodeinfo"]["hardware"]["model"])
             result.models[model] += 1
             domain = node["nodeinfo"]["system"]["domain_code"]
@@ -312,7 +324,10 @@ def main(outfile: str) -> None:
             if vbase is None or vtype is None:
                 msg = "Could not match version"
                 raise ValueError(msg)
-            if vtype == "foreign":
+            if vtype == "undefined":
+                vbase = "undefined"
+                version = "undefined"
+            if vtype in {"undefined", "foreign"}:
                 metric_gluon_alien_total.labels(
                     community=community,
                     version=version,
