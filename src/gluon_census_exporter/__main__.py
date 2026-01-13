@@ -51,6 +51,11 @@ PATTERNS: list[PatternDef] = [
         "base": re.compile(r"^(?P<base>gluon-.*)"),
         "vtype": "gluon-custom",
     },
+    {
+        "version": re.compile(r"^(?P<version>.*)"),
+        "base": re.compile(r"^(?P<base>.*)"),
+        "vtype": "foreign",
+    },
 ]
 
 
@@ -73,6 +78,7 @@ def get_base_version(pattern: str) -> tuple[str, str]:
 
 seen = set()
 total_version_sum = 0
+total_alien_sum = 0
 total_model_sum = 0
 total_domain_sum = 0
 duplicates = 0
@@ -259,12 +265,18 @@ def named_load(
 @click.command(short_help="Collect census information")
 @click.argument("outfile", default="./gluon-census.prom")
 def main(outfile: str) -> None:
-    global total_version_sum, total_model_sum, total_domain_sum
+    global total_version_sum, total_alien_sum, total_model_sum, total_domain_sum
     registry = CollectorRegistry()
     metric_gluon_version_total = Gauge(
         "gluon_base_total",
         "Number of unique nodes running on a certain Gluon base version",
         ["community", "base", "version", "vtype"],
+        registry=registry,
+    )
+    metric_gluon_alien_total = Gauge(
+        "gluon_alien_total",
+        "Number of unique nodes running on a non-Gluon version",
+        ["community", "version", "vtype"],
         registry=registry,
     )
     metric_gluon_model_total = Gauge(
@@ -300,13 +312,21 @@ def main(outfile: str) -> None:
             if vbase is None or vtype is None:
                 msg = "Could not match version"
                 raise ValueError(msg)
-            metric_gluon_version_total.labels(
-                community=community,
-                version=version,
-                base=vbase,
-                vtype=vtype,
-            ).inc(version_sum)
-            total_version_sum += version_sum
+            if vtype == "foreign":
+                metric_gluon_alien_total.labels(
+                    community=community,
+                    version=version,
+                    vtype=vtype,
+                ).inc(version_sum)
+                total_alien_sum += version_sum
+            else:
+                metric_gluon_version_total.labels(
+                    community=community,
+                    version=version,
+                    base=vbase,
+                    vtype=vtype,
+                ).inc(version_sum)
+                total_version_sum += version_sum
         for model, model_sum in result.models.items():
             metric_gluon_model_total.labels(community=community, model=model).inc(
                 model_sum,
@@ -323,6 +343,7 @@ def main(outfile: str) -> None:
     log.msg(
         "Collections summaries",
         version_sum=total_version_sum,
+        alien_sum=total_alien_sum,
         model_sum=total_model_sum,
         domain_sum=total_domain_sum,
     )
