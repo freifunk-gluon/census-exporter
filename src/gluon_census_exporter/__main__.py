@@ -51,6 +51,11 @@ PATTERNS: list[PatternDef] = [
         "base": re.compile(r"^(?P<base>gluon-.*)"),
         "vtype": "gluon-custom",
     },
+    {
+        "version": re.compile(r"^(?P<version>.*)"),
+        "base": re.compile(r"^(?P<base>.*)"),
+        "vtype": "foreign",
+    },
 ]
 
 
