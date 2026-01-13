@@ -115,7 +115,7 @@ class ParseResult:
     models: defaultdict[str, int] = field(
         default_factory=lambda: defaultdict(int),
     )
-    domains: defaultdict[str, int] = field(
+    domains: defaultdict[tuple[str, str], int] = field(
         default_factory=lambda: defaultdict(int),
     )
 
@@ -165,8 +165,12 @@ def parse_meshviewer(
             result.bases[version] += 1
             model = normalize_model_name(node["model"])
             result.models[model] += 1
-            domain = node["domain"]
-            result.domains[domain] += 1
+            try:
+                domain = node["domain"]
+            except KeyError:
+                domain = ""
+            site = ""
+            result.domains[(site, domain)] += 1
         except KeyError:
             continue
     return result
@@ -185,6 +189,7 @@ def parse_nodes_json_v1(
             base = None
         version = get_version(base)
         result.bases[version] += 1
+        result.domains[("", "")] += 1
     return result
 
 
@@ -205,8 +210,15 @@ def parse_nodes_json_v2(
             result.bases[version] += 1
             model = normalize_model_name(node["nodeinfo"]["hardware"]["model"])
             result.models[model] += 1
-            domain = node["nodeinfo"]["system"]["domain_code"]
-            result.domains[domain] += 1
+            try:
+                domain = node["nodeinfo"]["system"]["domain_code"]
+            except KeyError:
+                domain = ""
+            try:
+                site = node["nodeinfo"]["system"]["site_code"]
+            except KeyError:
+                site = ""
+            result.domains[(site, domain)] += 1
         except KeyError:
             continue
     return result
@@ -300,7 +312,7 @@ def main(outfile: str) -> None:
     metric_gluon_domain_total = Gauge(
         "gluon_domain_total",
         "Number of unique nodes on a specific Gluon domain",
-        ["community", "domain"],
+        ["community", "site", "domain"],
         registry=registry,
     )
 
@@ -347,8 +359,12 @@ def main(outfile: str) -> None:
                 model_sum,
             )
             total_model_sum += model_sum
-        for domain, domain_sum in result.domains.items():
-            metric_gluon_domain_total.labels(community=community, domain=domain).inc(
+        for (site, domain), domain_sum in result.domains.items():
+            metric_gluon_domain_total.labels(
+                community=community,
+                site=site,
+                domain=domain,
+            ).inc(
                 domain_sum,
             )
             total_domain_sum += domain_sum
