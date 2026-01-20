@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import json
+import operator
 import re
 import sys
 from collections import defaultdict
 from dataclasses import dataclass, field
+from functools import reduce
 from multiprocessing.pool import ThreadPool
 from pathlib import Path
 from typing import TYPE_CHECKING, TypedDict
@@ -148,6 +150,44 @@ def already_seen(node_id: str) -> bool:
     return False
 
 
+def get_node_item(
+    node: dict,
+    keys: list[str] | None,
+) -> str | None:
+    if keys is None:
+        return None
+    try:
+        value = reduce(operator.getitem, keys, node)
+    except KeyError:
+        return None
+    if isinstance(value, str):
+        return value
+    return None
+
+
+def parse_generic(
+    node_id: str,
+    node: dict,
+    keys: dict[str, list[str] | None],
+    result: ParseResult,
+) -> None:
+    if already_seen(node_id):
+        return
+    base = get_node_item(node, keys["base"])
+    version = get_version(base)
+    result.bases[version] += 1
+    model = get_node_item(node, keys["model"])
+    model = "" if model is None else normalize_model_name(model)
+    result.models[model] += 1
+    domain = get_node_item(node, keys["domain"])
+    if domain is None:
+        domain = ""
+    site = get_node_item(node, keys["site"])
+    if site is None:
+        site = ""
+    result.domains[(site, domain)] += 1
+
+
 def parse_meshviewer(
     data: dict,
 ) -> ParseResult:
@@ -157,25 +197,13 @@ def parse_meshviewer(
             node_id = node["node_id"]
         except KeyError:
             continue
-        if already_seen(node_id):
-            continue
-        try:
-            base = node["firmware"]["base"]
-        except KeyError:
-            base = None
-        version = get_version(base)
-        result.bases[version] += 1
-        try:
-            model = normalize_model_name(node["model"])
-        except KeyError:
-            model = ""
-        result.models[model] += 1
-        try:
-            domain = node["domain"]
-        except KeyError:
-            domain = ""
-        site = ""
-        result.domains[(site, domain)] += 1
+        keys: dict[str, list[str] | None] = {
+            "base": ["firmware", "base"],
+            "model": ["model"],
+            "domain": ["domain"],
+            "site": None,
+        }
+        parse_generic(node_id, node, keys, result)
     return result
 
 
@@ -184,16 +212,13 @@ def parse_nodes_json_v1(
 ) -> ParseResult:
     result: ParseResult = ParseResult()
     for node_id, node in data["nodes"].items():
-        if already_seen(node_id):
-            continue
-        try:
-            base = node["nodeinfo"]["software"]["firmware"]["base"]
-        except KeyError:
-            base = None
-        version = get_version(base)
-        result.bases[version] += 1
-        result.models[""] += 1
-        result.domains[("", "")] += 1
+        keys: dict[str, list[str] | None] = {
+            "base": ["nodeinfo", "software", "firmware", "base"],
+            "model": None,
+            "domain": None,
+            "site": None,
+        }
+        parse_generic(node_id, node, keys, result)
     return result
 
 
@@ -206,28 +231,13 @@ def parse_nodes_json_v2(
             node_id = node["nodeinfo"]["node_id"]
         except KeyError:
             continue
-        if already_seen(node_id):
-            continue
-        try:
-            base = node["nodeinfo"]["software"]["firmware"]["base"]
-        except KeyError:
-            base = None
-        version = get_version(base)
-        result.bases[version] += 1
-        try:
-            model = normalize_model_name(node["nodeinfo"]["hardware"]["model"])
-        except KeyError:
-            model = ""
-        result.models[model] += 1
-        try:
-            domain = node["nodeinfo"]["system"]["domain_code"]
-        except KeyError:
-            domain = ""
-        try:
-            site = node["nodeinfo"]["system"]["site_code"]
-        except KeyError:
-            site = ""
-        result.domains[(site, domain)] += 1
+        keys: dict[str, list[str] | None] = {
+            "base": ["nodeinfo", "software", "firmware", "base"],
+            "model": ["nodeinfo", "hardware", "model"],
+            "domain": ["nodeinfo", "system", "domain_code"],
+            "site": ["nodeinfo", "system", "site_code"],
+        }
+        parse_generic(node_id, node, keys, result)
     return result
 
 
