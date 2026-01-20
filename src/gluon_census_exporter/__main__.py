@@ -155,27 +155,27 @@ def parse_meshviewer(
     for node in data["nodes"]:
         try:
             node_id = node["node_id"]
-            if already_seen(node_id):
-                continue
-            try:
-                base = node["firmware"]["base"]
-            except KeyError:
-                base = None
-            version = get_version(base)
-            result.bases[version] += 1
-            try:
-                model = normalize_model_name(node["model"])
-            except KeyError:
-                model = ""
-            result.models[model] += 1
-            try:
-                domain = node["domain"]
-            except KeyError:
-                domain = ""
-            site = ""
-            result.domains[(site, domain)] += 1
         except KeyError:
             continue
+        if already_seen(node_id):
+            continue
+        try:
+            base = node["firmware"]["base"]
+        except KeyError:
+            base = None
+        version = get_version(base)
+        result.bases[version] += 1
+        try:
+            model = normalize_model_name(node["model"])
+        except KeyError:
+            model = ""
+        result.models[model] += 1
+        try:
+            domain = node["domain"]
+        except KeyError:
+            domain = ""
+        site = ""
+        result.domains[(site, domain)] += 1
     return result
 
 
@@ -204,30 +204,30 @@ def parse_nodes_json_v2(
     for node in data["nodes"]:
         try:
             node_id = node["nodeinfo"]["node_id"]
-            if already_seen(node_id):
-                continue
-            try:
-                base = node["nodeinfo"]["software"]["firmware"]["base"]
-            except KeyError:
-                base = None
-            version = get_version(base)
-            result.bases[version] += 1
-            try:
-                model = normalize_model_name(node["nodeinfo"]["hardware"]["model"])
-            except KeyError:
-                model = ""
-            result.models[model] += 1
-            try:
-                domain = node["nodeinfo"]["system"]["domain_code"]
-            except KeyError:
-                domain = ""
-            try:
-                site = node["nodeinfo"]["system"]["site_code"]
-            except KeyError:
-                site = ""
-            result.domains[(site, domain)] += 1
         except KeyError:
             continue
+        if already_seen(node_id):
+            continue
+        try:
+            base = node["nodeinfo"]["software"]["firmware"]["base"]
+        except KeyError:
+            base = None
+        version = get_version(base)
+        result.bases[version] += 1
+        try:
+            model = normalize_model_name(node["nodeinfo"]["hardware"]["model"])
+        except KeyError:
+            model = ""
+        result.models[model] += 1
+        try:
+            domain = node["nodeinfo"]["system"]["domain_code"]
+        except KeyError:
+            domain = ""
+        try:
+            site = node["nodeinfo"]["system"]["site_code"]
+        except KeyError:
+            site = ""
+        result.domains[(site, domain)] += 1
     return result
 
 
