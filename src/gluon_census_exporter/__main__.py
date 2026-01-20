@@ -6,7 +6,7 @@ import json
 import re
 import sys
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from multiprocessing.pool import ThreadPool
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -46,9 +46,15 @@ FORMATS: dict[str, Format] = {}
 
 @dataclass
 class ParseResult:
-    bases: dict[str, int]
-    models: dict[str, int]
-    domains: dict[str, int]
+    bases: defaultdict[str, int] = field(
+        default_factory=lambda: defaultdict(int),
+    )
+    models: defaultdict[str, int] = field(
+        default_factory=lambda: defaultdict(int),
+    )
+    domains: defaultdict[str, int] = field(
+        default_factory=lambda: defaultdict(int),
+    )
 
 
 @dataclass
@@ -82,9 +88,7 @@ def already_seen(node_id: str) -> bool:
 def parse_meshviewer(
     data: dict,
 ) -> ParseResult:
-    bases: dict[str, int] = defaultdict(int)
-    models: dict[str, int] = defaultdict(int)
-    domains: dict[str, int] = defaultdict(int)
+    result: ParseResult = ParseResult()
     for node in data["nodes"]:
         try:
             node_id = node["node_id"]
@@ -93,20 +97,20 @@ def parse_meshviewer(
             base = node["firmware"]["base"]
             match = VERSION_PATTERN.match(base)
             if match:
-                bases[match.group("version")] += 1
+                result.bases[match.group("version")] += 1
             model = normalize_model_name(node["model"])
-            models[model] += 1
+            result.models[model] += 1
             domain = node["domain"]
-            domains[domain] += 1
+            result.domains[domain] += 1
         except KeyError:
             continue
-    return ParseResult(bases, models, domains)
+    return result
 
 
 def parse_nodes_json_v1(
     data: dict,
 ) -> ParseResult:
-    bases: dict[str, int] = defaultdict(int)
+    result: ParseResult = ParseResult()
     for node_id, node in data["nodes"].items():
         if already_seen(node_id):
             continue
@@ -116,16 +120,14 @@ def parse_nodes_json_v1(
             continue
         match = VERSION_PATTERN.match(base)
         if match:
-            bases[match.group("version")] += 1
-    return ParseResult(bases, {}, {})
+            result.bases[match.group("version")] += 1
+    return result
 
 
 def parse_nodes_json_v2(
     data: dict,
 ) -> ParseResult:
-    bases: dict[str, int] = defaultdict(int)
-    models: dict[str, int] = defaultdict(int)
-    domains: dict[str, int] = defaultdict(int)
+    result: ParseResult = ParseResult()
     for node in data["nodes"]:
         try:
             node_id = node["nodeinfo"]["node_id"]
@@ -134,15 +136,14 @@ def parse_nodes_json_v2(
             base = node["nodeinfo"]["software"]["firmware"]["base"]
             match = VERSION_PATTERN.match(base)
             if match:
-                bases[match.group("version")] += 1
+                result.bases[match.group("version")] += 1
             model = normalize_model_name(node["nodeinfo"]["hardware"]["model"])
-            models[model] += 1
+            result.models[model] += 1
             domain = node["nodeinfo"]["system"]["domain_code"]
-            domains[domain] += 1
+            result.domains[domain] += 1
         except KeyError:
             continue
-
-    return ParseResult(bases, models, domains)
+    return result
 
 
 register_hook("meshviewer", SCHEMA_MESHVIEWER, parse_meshviewer)
