@@ -82,7 +82,6 @@ def already_seen(node_id: str) -> bool:
 def parse_meshviewer(
     data: dict,
 ) -> ParseResult:
-    global seen, duplicates
     bases: dict[str, int] = defaultdict(int)
     models: dict[str, int] = defaultdict(int)
     domains: dict[str, int] = defaultdict(int)
@@ -107,7 +106,6 @@ def parse_meshviewer(
 def parse_nodes_json_v1(
     data: dict,
 ) -> ParseResult:
-    global seen, duplicates
     bases: dict[str, int] = defaultdict(int)
     for node_id, node in data["nodes"].items():
         if already_seen(node_id):
@@ -125,7 +123,6 @@ def parse_nodes_json_v1(
 def parse_nodes_json_v2(
     data: dict,
 ) -> ParseResult:
-    global seen, duplicates
     bases: dict[str, int] = defaultdict(int)
     models: dict[str, int] = defaultdict(int)
     domains: dict[str, int] = defaultdict(int)
