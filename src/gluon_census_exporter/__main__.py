@@ -293,6 +293,28 @@ def named_load(
     return (community_name, result)
 
 
+def check_node_counts() -> None:
+    if total_version_sum + total_alien_sum != len(seen):
+        log.error(
+            "Node count mismatch",
+            unique=len(seen),
+            version_sum=total_version_sum,
+            alien_sum=total_alien_sum,
+        )
+    if total_model_sum != len(seen):
+        log.error(
+            "Model count mismatch",
+            unique=len(seen),
+            model_sum=total_model_sum,
+        )
+    if total_domain_sum != len(seen):
+        log.error(
+            "Domain count mismatch",
+            unique=len(seen),
+            domain_sum=total_domain_sum,
+        )
+
+
 @click.command(short_help="Collect census information")
 @click.argument("outfile", default="./gluon-census.prom")
 def main(outfile: str) -> None:
@@ -386,6 +408,8 @@ def main(outfile: str) -> None:
         domain_sum=total_domain_sum,
     )
     log.msg("Summary", unique=len(seen), duplicate=duplicates)
+
+    check_node_counts()
 
 
 if __name__ == "__main__":
