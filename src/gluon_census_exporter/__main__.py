@@ -163,7 +163,10 @@ def parse_meshviewer(
                 base = None
             version = get_version(base)
             result.bases[version] += 1
-            model = normalize_model_name(node["model"])
+            try:
+                model = normalize_model_name(node["model"])
+            except KeyError:
+                model = ""
             result.models[model] += 1
             try:
                 domain = node["domain"]
@@ -189,6 +192,7 @@ def parse_nodes_json_v1(
             base = None
         version = get_version(base)
         result.bases[version] += 1
+        result.models[""] += 1
         result.domains[("", "")] += 1
     return result
 
@@ -208,7 +212,10 @@ def parse_nodes_json_v2(
                 base = None
             version = get_version(base)
             result.bases[version] += 1
-            model = normalize_model_name(node["nodeinfo"]["hardware"]["model"])
+            try:
+                model = normalize_model_name(node["nodeinfo"]["hardware"]["model"])
+            except KeyError:
+                model = ""
             result.models[model] += 1
             try:
                 domain = node["nodeinfo"]["system"]["domain_code"]
