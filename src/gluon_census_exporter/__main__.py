@@ -66,25 +66,31 @@ PATTERNS: list[PatternDef] = [
 ]
 
 
-def get_version(pattern: str) -> str:
+def get_base_version(pattern: str | None) -> tuple[str, str, str]:
+    err_msg = "Could not match base version"
+    version = "undefined"
+    vbase = "undefined"
+    vtype = "undefined"
+
     if pattern is None:
-        return ""
+        return (version, vbase, vtype)
     for pidx in PATTERNS:
         match = pidx["version"].match(pattern)
-        if match:
-            return match.group("version")
-    return ""
+        if match is None:
+            continue
+        vtype = pidx["vtype"]
+        if vtype == "undefined":
+            break
 
-
-def get_base_version(pattern: str) -> tuple[str, str]:
-    if pattern is None:
-        return ("", "undefined")
-    for pidx in PATTERNS:
+        version = match.group("version")
         match = pidx["base"].match(pattern)
-        if match:
-            res = match.group("base")
-            return (res, pidx["vtype"])
-    return ("", "undefined")
+        if match is None:
+            raise ValueError(err_msg)
+        vbase = match.group("base")
+        if version is None or vbase is None or vtype is None:
+            raise ValueError(err_msg)
+        break
+    return (version, vbase, vtype)
 
 
 seen = set()
@@ -110,8 +116,8 @@ FORMATS: dict[str, Format] = {}
 
 
 @dataclass
-class ParseResult:
-    bases: defaultdict[str, int] = field(
+class ParsePartResult:
+    bases: defaultdict[tuple[str, str, str], int] = field(
         default_factory=lambda: defaultdict(int),
     )
     models: defaultdict[str, int] = field(
@@ -120,6 +126,12 @@ class ParseResult:
     domains: defaultdict[tuple[str, str], int] = field(
         default_factory=lambda: defaultdict(int),
     )
+
+
+@dataclass
+class ParseResult:
+    gluon: ParsePartResult = field(default_factory=ParsePartResult)
+    alien: ParsePartResult = field(default_factory=ParsePartResult)
 
 
 @dataclass
@@ -174,18 +186,23 @@ def parse_generic(
     if already_seen(node_id):
         return
     base = get_node_item(node, keys["base"])
-    version = get_version(base)
-    result.bases[version] += 1
+    version, vbase, vtype = get_base_version(base)
     model = get_node_item(node, keys["model"])
     model = "" if model is None else normalize_model_name(model)
-    result.models[model] += 1
     domain = get_node_item(node, keys["domain"])
     if domain is None:
         domain = ""
     site = get_node_item(node, keys["site"])
     if site is None:
         site = ""
-    result.domains[(site, domain)] += 1
+    if vtype in {"undefined", "foreign"}:
+        result.alien.bases[(version, vbase, vtype)] += 1
+        result.gluon.models[model] += 1
+        result.gluon.domains[(site, domain)] += 1
+    else:
+        result.gluon.bases[(version, vbase, vtype)] += 1
+        result.gluon.models[model] += 1
+        result.gluon.domains[(site, domain)] += 1
 
 
 def parse_meshviewer(
@@ -370,35 +387,27 @@ def main(outfile: str) -> None:
                 continue
         except TypeError:
             continue
-        for version, version_sum in result.bases.items():
-            vbase, vtype = get_base_version(version)
-            if vbase is None or vtype is None:
-                msg = "Could not match version"
-                raise ValueError(msg)
-            if vtype == "undefined":
-                vbase = "undefined"
-                version = "undefined"
-            if vtype in {"undefined", "foreign"}:
-                metric_gluon_alien_total.labels(
-                    community=community,
-                    version=version,
-                    vtype=vtype,
-                ).inc(version_sum)
-                total_alien_sum += version_sum
-            else:
-                metric_gluon_version_total.labels(
-                    community=community,
-                    version=version,
-                    base=vbase,
-                    vtype=vtype,
-                ).inc(version_sum)
-                total_version_sum += version_sum
-        for model, model_sum in result.models.items():
+        for (version, vbase, vtype), version_sum in result.gluon.bases.items():
+            metric_gluon_version_total.labels(
+                community=community,
+                version=version,
+                base=vbase,
+                vtype=vtype,
+            ).inc(version_sum)
+            total_version_sum += version_sum
+        for (version, _, vtype), version_sum in result.alien.bases.items():
+            metric_gluon_alien_total.labels(
+                community=community,
+                version=version,
+                vtype=vtype,
+            ).inc(version_sum)
+            total_alien_sum += version_sum
+        for model, model_sum in result.gluon.models.items():
             metric_gluon_model_total.labels(community=community, model=model).inc(
                 model_sum,
             )
             total_model_sum += model_sum
-        for (site, domain), domain_sum in result.domains.items():
+        for (site, domain), domain_sum in result.gluon.domains.items():
             metric_gluon_domain_total.labels(
                 community=community,
                 site=site,
