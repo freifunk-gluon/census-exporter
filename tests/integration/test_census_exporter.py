@@ -88,3 +88,49 @@ def test_fixed_main(httpserver: HTTPServer, meshviewer_data: dict) -> None:
                 assert content.count(total) == amount
 
     httpserver.check_assertions()
+
+
+def test_fixed_main_duplicates(httpserver: HTTPServer, meshviewer_data: dict) -> None:
+    """Verify the program counts right.
+
+    Spawn a webserver with a meshviewer.json and feed the exporter a matching
+    communities.json.
+
+    Check that the meshviewer.json is read just once and is evaluated properly.
+    """
+    runner = CliRunner()
+    output_filename = "test_output.prom"
+
+    httpserver.expect_oneshot_request("/meshviewer.json").respond_with_json(
+        meshviewer_data,
+    )
+    httpserver.expect_oneshot_request("/meshviewer2.json").respond_with_json(
+        meshviewer_data,
+    )
+
+    with runner.isolated_filesystem():
+        with Path("communities.json").open("w") as f:
+            json_str = json.dumps(
+                {
+                    "Demotown": [httpserver.url_for("/meshviewer.json")],
+                    "Duplicatetown": [httpserver.url_for("/meshviewer2.json")],
+                },
+            )
+            f.write(json_str)
+
+        result = runner.invoke(main, [output_filename])
+        assert result.exit_code == 0
+        assert "format=meshviewer" in result.output
+        assert "duplicate=1602" in result.output
+        assert "unique=801" in result.output
+
+        with Path(output_filename).open("r") as p:
+            content = p.read()
+            for total, amount in (
+                ("gluon_base_total{", 0),
+                ("gluon_model_total{", 0),
+                ("gluon_domain_total{", 0),
+            ):
+                assert content.count(total) == amount
+
+    httpserver.check_assertions()
