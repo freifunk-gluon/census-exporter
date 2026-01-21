@@ -1,8 +1,29 @@
+import json
+from importlib.resources import files
+from importlib.resources.abc import Traversable
 from pathlib import Path
 
+import pytest
 from click.testing import CliRunner
 
+import tests.resources
 from gluon_census_exporter.__main__ import main
+
+
+@pytest.fixture
+def meshviewer_path() -> Traversable:
+    return files(tests.resources).joinpath("meshviewer.json")
+
+
+@pytest.fixture
+def meshviewer_data(meshviewer_path: Traversable) -> dict:
+    with meshviewer_path.open() as meshviewer_handle:
+        return json.load(meshviewer_handle)
+
+
+def test_read_meshviewer_resource(meshviewer_path: Traversable) -> None:
+    with meshviewer_path.open() as mv:
+        assert mv.read()
 
 
 def test_main() -> None:
