@@ -97,9 +97,11 @@ seen = set()
 total_version_sum = 0
 total_model_sum = 0
 total_domain_sum = 0
+total_source_sum = 0
 total_alien_sum = 0
 total_alien_model_sum = 0
 total_alien_domain_sum = 0
+total_alien_source_sum = 0
 duplicates = 0
 
 
@@ -128,6 +130,9 @@ class ParsePartResult:
     domains: defaultdict[tuple[str, str], int] = field(
         default_factory=lambda: defaultdict(int),
     )
+    source_type: defaultdict[str, int] = field(
+        default_factory=lambda: defaultdict(int),
+    )
 
 
 @dataclass
@@ -140,7 +145,7 @@ class ParseResult:
 class Format:
     name: str
     schema: Schema
-    parser: Callable[[dict], ParseResult]
+    parser: Callable[[dict, str], ParseResult]
 
 
 def normalize_model_name(name: str) -> str:
@@ -150,7 +155,7 @@ def normalize_model_name(name: str) -> str:
 def register_hook(
     name: str,
     schema: Schema,
-    parser: Callable[[dict], ParseResult],
+    parser: Callable[[dict, str], ParseResult],
 ) -> None:
     FORMATS[name] = Format(name=name, schema=schema, parser=parser)
 
@@ -237,6 +242,7 @@ def parse_generic(
     node_id: str,
     node: dict,
     keys: dict[str, list[str] | None],
+    source_type: str,
     result: ParseResult,
 ) -> None:
     if already_seen(node_id):
@@ -255,14 +261,17 @@ def parse_generic(
         result.alien.bases[(version, vbase, vtype)] += 1
         result.alien.models[model] += 1
         result.alien.domains[(site, domain)] += 1
+        result.alien.source_type[source_type] += 1
     else:
         result.gluon.bases[(version, vbase, vtype)] += 1
         result.gluon.models[model] += 1
         result.gluon.domains[(site, domain)] += 1
+        result.gluon.source_type[source_type] += 1
 
 
 def parse_meshviewer(
     data: dict,
+    name: str,
 ) -> ParseResult:
     result: ParseResult = ParseResult()
     for node in data["nodes"]:
@@ -276,12 +285,13 @@ def parse_meshviewer(
             "domain": ["domain"],
             "site": None,
         }
-        parse_generic(node_id, node, keys, result)
+        parse_generic(node_id, node, keys, name, result)
     return result
 
 
 def parse_nodes_json_v1(
     data: dict,
+    name: str,
 ) -> ParseResult:
     result: ParseResult = ParseResult()
     for node_id, node in data["nodes"].items():
@@ -291,12 +301,13 @@ def parse_nodes_json_v1(
             "domain": None,
             "site": None,
         }
-        parse_generic(node_id, node, keys, result)
+        parse_generic(node_id, node, keys, name, result)
     return result
 
 
 def parse_nodes_json_v2(
     data: dict,
+    name: str,
 ) -> ParseResult:
     result: ParseResult = ParseResult()
     for node in data["nodes"]:
@@ -310,7 +321,7 @@ def parse_nodes_json_v2(
             "domain": ["nodeinfo", "system", "domain_code"],
             "site": ["nodeinfo", "system", "site_code"],
         }
-        parse_generic(node_id, node, keys, result)
+        parse_generic(node_id, node, keys, name, result)
     return result
 
 
@@ -355,7 +366,7 @@ def load(url: str) -> ParseResult:
         try:
             format_set.schema(data)
             log.msg("Processing", format=name, url=url)
-            return format_set.parser(data)
+            return format_set.parser(data, name)
         except (Invalid, MultipleInvalid):
             pass
 
@@ -381,8 +392,9 @@ def update_gauges(
     result: ParseResult,
     gauges: dict[str, Gauge],
 ) -> None:
-    global total_version_sum, total_model_sum, total_domain_sum
+    global total_version_sum, total_model_sum, total_domain_sum, total_source_sum
     global total_alien_sum, total_alien_model_sum, total_alien_domain_sum
+    global total_alien_source_sum
     for (version, vbase, vtype), version_sum in result.gluon.bases.items():
         gauges["metric_gluon_version_total"].labels(
             community=community,
@@ -429,6 +441,22 @@ def update_gauges(
             domain_sum,
         )
         total_alien_domain_sum += domain_sum
+    for source, source_sum in result.gluon.source_type.items():
+        gauges["metric_gluon_source_total"].labels(
+            community=community,
+            source_type=source,
+        ).inc(
+            source_sum,
+        )
+        total_source_sum += source_sum
+    for source, source_sum in result.alien.source_type.items():
+        gauges["metric_gluon_alien_source_total"].labels(
+            community=community,
+            source_type=source,
+        ).inc(
+            source_sum,
+        )
+        total_alien_source_sum += source_sum
 
 
 def log_summary() -> None:
@@ -437,12 +465,14 @@ def log_summary() -> None:
         version_sum=total_version_sum,
         model_sum=total_model_sum,
         domain_sum=total_domain_sum,
+        source_sum=total_source_sum,
     )
     log.msg(
         "Collections summaries, alien",
         alien_sum=total_alien_sum,
         alien_model_sum=total_alien_model_sum,
         alien_domain_sum=total_alien_domain_sum,
+        alien_source_sum=total_alien_source_sum,
     )
     log.msg("Summary", unique=len(seen), duplicate=duplicates)
 
@@ -468,6 +498,13 @@ def check_node_counts() -> None:
             unique=len(seen),
             domain_sum=total_domain_sum,
             alien_domain_sum=total_alien_domain_sum,
+        )
+    if total_source_sum + total_alien_source_sum != len(seen):
+        log.error(
+            "Source type count mismatch",
+            unique=len(seen),
+            source_sum=total_source_sum,
+            alien_source_sum=total_alien_source_sum,
         )
 
 
