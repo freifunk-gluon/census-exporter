@@ -6,10 +6,10 @@ import json
 import re
 import sys
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from multiprocessing.pool import ThreadPool
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypedDict
 
 import click
 import requests
@@ -23,10 +23,73 @@ if TYPE_CHECKING:
 
 log = structlog.get_logger()
 
-VERSION_PATTERN = re.compile(r"^(?P<version>gluon-v\d{4}\.\d(?:\.\d)?(?:-\d+)?).*")
-BASE_PATTERN = re.compile(r"^(?P<base>gluon-v\d{4}\.\d(?:\.\d)?).*")
+
+class PatternDef(TypedDict):
+    version: re.Pattern[str]
+    base: re.Pattern[str]
+    vtype: str
+
+
+PATTERNS: list[PatternDef] = [
+    {
+        "version": re.compile(r"^(?P<version>gluon-v\d{4}\.\d(?:\.\d)?(?:-\d+)?).*"),
+        "base": re.compile(r"^(?P<base>gluon-v\d{4}\.\d(?:\.\d)?).*"),
+        "vtype": "gluon-base",
+    },
+    {
+        "version": re.compile(r"^(?P<version>gluon-unknown)$"),
+        "base": re.compile(r"^(?P<base>gluon-unknown)$"),
+        "vtype": "gluon-unknown",
+    },
+    {
+        "version": re.compile(r"^(?P<version>gluon-[0-9a-f]{7,})$"),
+        "base": re.compile(r"^(?P<base>gluon-[0-9a-f]{7,})$"),
+        "vtype": "gluon-commitid",
+    },
+    {
+        "version": re.compile(r"^(?P<version>gluon-.*)"),
+        "base": re.compile(r"^(?P<base>gluon-.*)"),
+        "vtype": "gluon-custom",
+    },
+    {
+        "version": re.compile(r"^(?P<version>)$"),
+        "base": re.compile(r"^(?P<base>)$"),
+        "vtype": "undefined",
+    },
+    {
+        "version": re.compile(r"^(?P<version>.*)"),
+        "base": re.compile(r"^(?P<base>.*)"),
+        "vtype": "foreign",
+    },
+]
+
+
+def get_version(pattern: str) -> str:
+    if pattern is None:
+        return ""
+    for pidx in PATTERNS:
+        match = pidx["version"].match(pattern)
+        if match:
+            return match.group("version")
+    return ""
+
+
+def get_base_version(pattern: str) -> tuple[str, str]:
+    if pattern is None:
+        return ("", "undefined")
+    for pidx in PATTERNS:
+        match = pidx["base"].match(pattern)
+        if match:
+            res = match.group("base")
+            return (res, pidx["vtype"])
+    return ("", "undefined")
+
 
 seen = set()
+total_version_sum = 0
+total_alien_sum = 0
+total_model_sum = 0
+total_domain_sum = 0
 duplicates = 0
 
 
@@ -46,9 +109,15 @@ FORMATS: dict[str, Format] = {}
 
 @dataclass
 class ParseResult:
-    bases: dict[str, int]
-    models: dict[str, int]
-    domains: dict[str, int]
+    bases: defaultdict[str, int] = field(
+        default_factory=lambda: defaultdict(int),
+    )
+    models: defaultdict[str, int] = field(
+        default_factory=lambda: defaultdict(int),
+    )
+    domains: defaultdict[str, int] = field(
+        default_factory=lambda: defaultdict(int),
+    )
 
 
 @dataclass
@@ -82,70 +151,65 @@ def already_seen(node_id: str) -> bool:
 def parse_meshviewer(
     data: dict,
 ) -> ParseResult:
-    global seen, duplicates
-    bases: dict[str, int] = defaultdict(int)
-    models: dict[str, int] = defaultdict(int)
-    domains: dict[str, int] = defaultdict(int)
+    result: ParseResult = ParseResult()
     for node in data["nodes"]:
         try:
             node_id = node["node_id"]
             if already_seen(node_id):
                 continue
-            base = node["firmware"]["base"]
-            match = VERSION_PATTERN.match(base)
-            if match:
-                bases[match.group("version")] += 1
+            try:
+                base = node["firmware"]["base"]
+            except KeyError:
+                base = None
+            version = get_version(base)
+            result.bases[version] += 1
             model = normalize_model_name(node["model"])
-            models[model] += 1
+            result.models[model] += 1
             domain = node["domain"]
-            domains[domain] += 1
+            result.domains[domain] += 1
         except KeyError:
             continue
-    return ParseResult(bases, models, domains)
+    return result
 
 
 def parse_nodes_json_v1(
     data: dict,
 ) -> ParseResult:
-    global seen, duplicates
-    bases: dict[str, int] = defaultdict(int)
+    result: ParseResult = ParseResult()
     for node_id, node in data["nodes"].items():
         if already_seen(node_id):
             continue
         try:
             base = node["nodeinfo"]["software"]["firmware"]["base"]
         except KeyError:
-            continue
-        match = VERSION_PATTERN.match(base)
-        if match:
-            bases[match.group("version")] += 1
-    return ParseResult(bases, {}, {})
+            base = None
+        version = get_version(base)
+        result.bases[version] += 1
+    return result
 
 
 def parse_nodes_json_v2(
     data: dict,
 ) -> ParseResult:
-    global seen, duplicates
-    bases: dict[str, int] = defaultdict(int)
-    models: dict[str, int] = defaultdict(int)
-    domains: dict[str, int] = defaultdict(int)
+    result: ParseResult = ParseResult()
     for node in data["nodes"]:
         try:
             node_id = node["nodeinfo"]["node_id"]
             if already_seen(node_id):
                 continue
-            base = node["nodeinfo"]["software"]["firmware"]["base"]
-            match = VERSION_PATTERN.match(base)
-            if match:
-                bases[match.group("version")] += 1
+            try:
+                base = node["nodeinfo"]["software"]["firmware"]["base"]
+            except KeyError:
+                base = None
+            version = get_version(base)
+            result.bases[version] += 1
             model = normalize_model_name(node["nodeinfo"]["hardware"]["model"])
-            models[model] += 1
+            result.models[model] += 1
             domain = node["nodeinfo"]["system"]["domain_code"]
-            domains[domain] += 1
+            result.domains[domain] += 1
         except KeyError:
             continue
-
-    return ParseResult(bases, models, domains)
+    return result
 
 
 register_hook("meshviewer", SCHEMA_MESHVIEWER, parse_meshviewer)
@@ -213,11 +277,18 @@ def named_load(
 @click.command(short_help="Collect census information")
 @click.argument("outfile", default="./gluon-census.prom")
 def main(outfile: str) -> None:
+    global total_version_sum, total_alien_sum, total_model_sum, total_domain_sum
     registry = CollectorRegistry()
     metric_gluon_version_total = Gauge(
         "gluon_base_total",
         "Number of unique nodes running on a certain Gluon base version",
-        ["community", "base", "version"],
+        ["community", "base", "version", "vtype"],
+        registry=registry,
+    )
+    metric_gluon_alien_total = Gauge(
+        "gluon_alien_total",
+        "Number of unique nodes running on a non-Gluon version",
+        ["community", "version", "vtype"],
         registry=registry,
     )
     metric_gluon_model_total = Gauge(
@@ -249,27 +320,48 @@ def main(outfile: str) -> None:
         except TypeError:
             continue
         for version, version_sum in result.bases.items():
-            match = BASE_PATTERN.match(version)
-            if match is None:
+            vbase, vtype = get_base_version(version)
+            if vbase is None or vtype is None:
                 msg = "Could not match version"
                 raise ValueError(msg)
-            base = match.group("base")
-            metric_gluon_version_total.labels(
-                community=community,
-                version=version,
-                base=base,
-            ).inc(version_sum)
+            if vtype == "undefined":
+                vbase = "undefined"
+                version = "undefined"
+            if vtype in {"undefined", "foreign"}:
+                metric_gluon_alien_total.labels(
+                    community=community,
+                    version=version,
+                    vtype=vtype,
+                ).inc(version_sum)
+                total_alien_sum += version_sum
+            else:
+                metric_gluon_version_total.labels(
+                    community=community,
+                    version=version,
+                    base=vbase,
+                    vtype=vtype,
+                ).inc(version_sum)
+                total_version_sum += version_sum
         for model, model_sum in result.models.items():
             metric_gluon_model_total.labels(community=community, model=model).inc(
                 model_sum,
             )
+            total_model_sum += model_sum
         for domain, domain_sum in result.domains.items():
             metric_gluon_domain_total.labels(community=community, domain=domain).inc(
                 domain_sum,
             )
+            total_domain_sum += domain_sum
 
     write_to_textfile(outfile, registry)
 
+    log.msg(
+        "Collections summaries",
+        version_sum=total_version_sum,
+        alien_sum=total_alien_sum,
+        model_sum=total_model_sum,
+        domain_sum=total_domain_sum,
+    )
     log.msg("Summary", unique=len(seen), duplicate=duplicates)
 
 
