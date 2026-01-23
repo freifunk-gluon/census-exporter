@@ -155,6 +155,60 @@ def register_hook(
     FORMATS[name] = Format(name=name, schema=schema, parser=parser)
 
 
+def create_gauges(registry: CollectorRegistry) -> dict[str, Gauge]:
+    gauges: dict[str, Gauge] = {
+        "metric_gluon_version_total": Gauge(
+            "gluon_base_total",
+            "Number of unique nodes running on a certain Gluon base version",
+            ["community", "base", "version", "vtype"],
+            registry=registry,
+        ),
+        "metric_gluon_model_total": Gauge(
+            "gluon_model_total",
+            "Number of unique nodes using a certain device model",
+            ["community", "model"],
+            registry=registry,
+        ),
+        "metric_gluon_domain_total": Gauge(
+            "gluon_domain_total",
+            "Number of unique nodes on a specific Gluon domain",
+            ["community", "site", "domain"],
+            registry=registry,
+        ),
+        "metric_gluon_source_total": Gauge(
+            "gluon_source_total",
+            "Number of unique nodes from a specific source type",
+            ["community", "source_type"],
+            registry=registry,
+        ),
+        "metric_gluon_alien_total": Gauge(
+            "gluon_alien_total",
+            "Number of unique nodes running on a non-Gluon version",
+            ["community", "version", "vtype"],
+            registry=registry,
+        ),
+        "metric_gluon_alien_model_total": Gauge(
+            "gluon_alien_model_total",
+            "Number of unique non-Gluon nodes using a certain device model",
+            ["community", "model"],
+            registry=registry,
+        ),
+        "metric_gluon_alien_domain_total": Gauge(
+            "gluon_alien_domain_total",
+            "Number of unique non-Gluon nodes on a specific Gluon domain",
+            ["community", "site", "domain"],
+            registry=registry,
+        ),
+        "metric_gluon_alien_source_total": Gauge(
+            "gluon_alien_source_total",
+            "Number of unique non-Gluon nodes from a specific source type",
+            ["community", "source_type"],
+            registry=registry,
+        ),
+    }
+    return gauges
+
+
 def already_seen(node_id: str) -> bool:
     global duplicates, seen
     if node_id in seen:
@@ -322,6 +376,77 @@ def named_load(
     return (community_name, result)
 
 
+def update_gauges(
+    community: str,
+    result: ParseResult,
+    gauges: dict[str, Gauge],
+) -> None:
+    global total_version_sum, total_model_sum, total_domain_sum
+    global total_alien_sum, total_alien_model_sum, total_alien_domain_sum
+    for (version, vbase, vtype), version_sum in result.gluon.bases.items():
+        gauges["metric_gluon_version_total"].labels(
+            community=community,
+            version=version,
+            base=vbase,
+            vtype=vtype,
+        ).inc(version_sum)
+        total_version_sum += version_sum
+    for (version, _, vtype), version_sum in result.alien.bases.items():
+        gauges["metric_gluon_alien_total"].labels(
+            community=community,
+            version=version,
+            vtype=vtype,
+        ).inc(version_sum)
+        total_alien_sum += version_sum
+    for model, model_sum in result.gluon.models.items():
+        gauges["metric_gluon_model_total"].labels(community=community, model=model).inc(
+            model_sum,
+        )
+        total_model_sum += model_sum
+    for model, model_sum in result.alien.models.items():
+        gauges["metric_gluon_alien_model_total"].labels(
+            community=community,
+            model=model,
+        ).inc(
+            model_sum,
+        )
+        total_alien_model_sum += model_sum
+    for (site, domain), domain_sum in result.gluon.domains.items():
+        gauges["metric_gluon_domain_total"].labels(
+            community=community,
+            site=site,
+            domain=domain,
+        ).inc(
+            domain_sum,
+        )
+        total_domain_sum += domain_sum
+    for (site, domain), domain_sum in result.alien.domains.items():
+        gauges["metric_gluon_alien_domain_total"].labels(
+            community=community,
+            site=site,
+            domain=domain,
+        ).inc(
+            domain_sum,
+        )
+        total_alien_domain_sum += domain_sum
+
+
+def log_summary() -> None:
+    log.msg(
+        "Collections summaries",
+        version_sum=total_version_sum,
+        model_sum=total_model_sum,
+        domain_sum=total_domain_sum,
+    )
+    log.msg(
+        "Collections summaries, alien",
+        alien_sum=total_alien_sum,
+        alien_model_sum=total_alien_model_sum,
+        alien_domain_sum=total_alien_domain_sum,
+    )
+    log.msg("Summary", unique=len(seen), duplicate=duplicates)
+
+
 def check_node_counts() -> None:
     if total_version_sum + total_alien_sum != len(seen):
         log.error(
@@ -349,45 +474,8 @@ def check_node_counts() -> None:
 @click.command(short_help="Collect census information")
 @click.argument("outfile", default="./gluon-census.prom")
 def main(outfile: str) -> None:
-    global total_version_sum, total_model_sum, total_domain_sum
-    global total_alien_sum, total_alien_model_sum, total_alien_domain_sum
     registry = CollectorRegistry()
-    metric_gluon_version_total = Gauge(
-        "gluon_base_total",
-        "Number of unique nodes running on a certain Gluon base version",
-        ["community", "base", "version", "vtype"],
-        registry=registry,
-    )
-    metric_gluon_model_total = Gauge(
-        "gluon_model_total",
-        "Number of unique nodes using a certain device model",
-        ["community", "model"],
-        registry=registry,
-    )
-    metric_gluon_domain_total = Gauge(
-        "gluon_domain_total",
-        "Number of unique nodes on a specific Gluon domain",
-        ["community", "site", "domain"],
-        registry=registry,
-    )
-    metric_gluon_alien_total = Gauge(
-        "gluon_alien_total",
-        "Number of unique nodes running on a non-Gluon version",
-        ["community", "version", "vtype"],
-        registry=registry,
-    )
-    metric_gluon_alien_model_total = Gauge(
-        "gluon_alien_model_total",
-        "Number of unique non-Gluon nodes using a certain device model",
-        ["community", "model"],
-        registry=registry,
-    )
-    metric_gluon_alien_domain_total = Gauge(
-        "gluon_alien_domain_total",
-        "Number of unique non-Gluon nodes on a specific Gluon domain",
-        ["community", "site", "domain"],
-        registry=registry,
-    )
+    gauges = create_gauges(registry)
 
     with Path("./communities.json").open() as handle:
         communities = json.load(handle)
@@ -404,66 +492,11 @@ def main(outfile: str) -> None:
                 continue
         except TypeError:
             continue
-        for (version, vbase, vtype), version_sum in result.gluon.bases.items():
-            metric_gluon_version_total.labels(
-                community=community,
-                version=version,
-                base=vbase,
-                vtype=vtype,
-            ).inc(version_sum)
-            total_version_sum += version_sum
-        for (version, _, vtype), version_sum in result.alien.bases.items():
-            metric_gluon_alien_total.labels(
-                community=community,
-                version=version,
-                vtype=vtype,
-            ).inc(version_sum)
-            total_alien_sum += version_sum
-        for model, model_sum in result.gluon.models.items():
-            metric_gluon_model_total.labels(community=community, model=model).inc(
-                model_sum,
-            )
-            total_model_sum += model_sum
-        for model, model_sum in result.alien.models.items():
-            metric_gluon_alien_model_total.labels(community=community, model=model).inc(
-                model_sum,
-            )
-            total_alien_model_sum += model_sum
-        for (site, domain), domain_sum in result.gluon.domains.items():
-            metric_gluon_domain_total.labels(
-                community=community,
-                site=site,
-                domain=domain,
-            ).inc(
-                domain_sum,
-            )
-            total_domain_sum += domain_sum
-        for (site, domain), domain_sum in result.alien.domains.items():
-            metric_gluon_alien_domain_total.labels(
-                community=community,
-                site=site,
-                domain=domain,
-            ).inc(
-                domain_sum,
-            )
-            total_alien_domain_sum += domain_sum
+        update_gauges(community, result, gauges)
 
     write_to_textfile(outfile, registry)
 
-    log.msg(
-        "Collections summaries",
-        version_sum=total_version_sum,
-        model_sum=total_model_sum,
-        domain_sum=total_domain_sum,
-    )
-    log.msg(
-        "Collections summaries, alien",
-        alien_sum=total_alien_sum,
-        alien_model_sum=total_alien_model_sum,
-        alien_domain_sum=total_alien_domain_sum,
-    )
-    log.msg("Summary", unique=len(seen), duplicate=duplicates)
-
+    log_summary()
     check_node_counts()
 
 
