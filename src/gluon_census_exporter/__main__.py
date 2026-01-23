@@ -3,13 +3,15 @@
 from __future__ import annotations
 
 import json
+import operator
 import re
 import sys
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from functools import reduce
 from multiprocessing.pool import ThreadPool
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypedDict
 
 import click
 import requests
@@ -23,10 +25,83 @@ if TYPE_CHECKING:
 
 log = structlog.get_logger()
 
-VERSION_PATTERN = re.compile(r"^(?P<version>gluon-v\d{4}\.\d(?:\.\d)?(?:-\d+)?).*")
-BASE_PATTERN = re.compile(r"^(?P<base>gluon-v\d{4}\.\d(?:\.\d)?).*")
+
+class PatternDef(TypedDict):
+    version: re.Pattern[str]
+    base: re.Pattern[str]
+    vtype: str
+
+
+PATTERNS: list[PatternDef] = [
+    {
+        "version": re.compile(r"^(?P<version>gluon-v\d{4}\.\d(?:\.\d)?(?:-\d+)?).*"),
+        "base": re.compile(r"^(?P<base>gluon-v\d{4}\.\d(?:\.\d)?).*"),
+        "vtype": "gluon-base",
+    },
+    {
+        "version": re.compile(r"^(?P<version>gluon-unknown)$"),
+        "base": re.compile(r"^(?P<base>gluon-unknown)$"),
+        "vtype": "gluon-unknown",
+    },
+    {
+        "version": re.compile(r"^(?P<version>gluon-[0-9a-f]{7,})$"),
+        "base": re.compile(r"^(?P<base>gluon-[0-9a-f]{7,})$"),
+        "vtype": "gluon-commitid",
+    },
+    {
+        "version": re.compile(r"^(?P<version>gluon-.*)"),
+        "base": re.compile(r"^(?P<base>gluon-.*)"),
+        "vtype": "gluon-custom",
+    },
+    {
+        "version": re.compile(r"^(?P<version>)$"),
+        "base": re.compile(r"^(?P<base>)$"),
+        "vtype": "undefined",
+    },
+    {
+        "version": re.compile(r"^(?P<version>.*)"),
+        "base": re.compile(r"^(?P<base>.*)"),
+        "vtype": "foreign",
+    },
+]
+
+
+def get_base_version(pattern: str | None) -> tuple[str, str, str]:
+    err_msg = "Could not match base version"
+    version = "undefined"
+    vbase = "undefined"
+    vtype = "undefined"
+
+    if pattern is None:
+        return (version, vbase, vtype)
+    for pidx in PATTERNS:
+        match = pidx["version"].match(pattern)
+        if match is None:
+            continue
+        vtype = pidx["vtype"]
+        if vtype == "undefined":
+            break
+
+        version = match.group("version")
+        match = pidx["base"].match(pattern)
+        if match is None:
+            raise ValueError(err_msg)
+        vbase = match.group("base")
+        if version is None or vbase is None or vtype is None:
+            raise ValueError(err_msg)
+        break
+    return (version, vbase, vtype)
+
 
 seen = set()
+total_version_sum = 0
+total_model_sum = 0
+total_domain_sum = 0
+total_source_sum = 0
+total_alien_sum = 0
+total_alien_model_sum = 0
+total_alien_domain_sum = 0
+total_alien_source_sum = 0
 duplicates = 0
 
 
@@ -45,17 +120,32 @@ FORMATS: dict[str, Format] = {}
 
 
 @dataclass
+class ParsePartResult:
+    bases: defaultdict[tuple[str, str, str], int] = field(
+        default_factory=lambda: defaultdict(int),
+    )
+    models: defaultdict[str, int] = field(
+        default_factory=lambda: defaultdict(int),
+    )
+    domains: defaultdict[tuple[str, str], int] = field(
+        default_factory=lambda: defaultdict(int),
+    )
+    source_type: defaultdict[str, int] = field(
+        default_factory=lambda: defaultdict(int),
+    )
+
+
+@dataclass
 class ParseResult:
-    bases: dict[str, int]
-    models: dict[str, int]
-    domains: dict[str, int]
+    gluon: ParsePartResult = field(default_factory=ParsePartResult)
+    alien: ParsePartResult = field(default_factory=ParsePartResult)
 
 
 @dataclass
 class Format:
     name: str
     schema: Schema
-    parser: Callable[[dict], ParseResult]
+    parser: Callable[[dict, str], ParseResult]
 
 
 def normalize_model_name(name: str) -> str:
@@ -65,9 +155,63 @@ def normalize_model_name(name: str) -> str:
 def register_hook(
     name: str,
     schema: Schema,
-    parser: Callable[[dict], ParseResult],
+    parser: Callable[[dict, str], ParseResult],
 ) -> None:
     FORMATS[name] = Format(name=name, schema=schema, parser=parser)
+
+
+def create_gauges(registry: CollectorRegistry) -> dict[str, Gauge]:
+    gauges: dict[str, Gauge] = {
+        "metric_gluon_version_total": Gauge(
+            "gluon_base_total",
+            "Number of unique nodes running on a certain Gluon base version",
+            ["community", "base", "version", "vtype"],
+            registry=registry,
+        ),
+        "metric_gluon_model_total": Gauge(
+            "gluon_model_total",
+            "Number of unique nodes using a certain device model",
+            ["community", "model"],
+            registry=registry,
+        ),
+        "metric_gluon_domain_total": Gauge(
+            "gluon_domain_total",
+            "Number of unique nodes on a specific Gluon domain",
+            ["community", "site", "domain"],
+            registry=registry,
+        ),
+        "metric_gluon_source_total": Gauge(
+            "gluon_source_total",
+            "Number of unique nodes from a specific source type",
+            ["community", "source_type"],
+            registry=registry,
+        ),
+        "metric_gluon_alien_total": Gauge(
+            "gluon_alien_total",
+            "Number of unique nodes running on a non-Gluon version",
+            ["community", "version", "vtype"],
+            registry=registry,
+        ),
+        "metric_gluon_alien_model_total": Gauge(
+            "gluon_alien_model_total",
+            "Number of unique non-Gluon nodes using a certain device model",
+            ["community", "model"],
+            registry=registry,
+        ),
+        "metric_gluon_alien_domain_total": Gauge(
+            "gluon_alien_domain_total",
+            "Number of unique non-Gluon nodes on a specific Gluon domain",
+            ["community", "site", "domain"],
+            registry=registry,
+        ),
+        "metric_gluon_alien_source_total": Gauge(
+            "gluon_alien_source_total",
+            "Number of unique non-Gluon nodes from a specific source type",
+            ["community", "source_type"],
+            registry=registry,
+        ),
+    }
+    return gauges
 
 
 def already_seen(node_id: str) -> bool:
@@ -79,73 +223,106 @@ def already_seen(node_id: str) -> bool:
     return False
 
 
+def get_node_item(
+    node: dict,
+    keys: list[str] | None,
+) -> str | None:
+    if keys is None:
+        return None
+    try:
+        value = reduce(operator.getitem, keys, node)
+    except KeyError:
+        return None
+    if isinstance(value, str):
+        return value
+    return None
+
+
+def parse_generic(
+    node_id: str,
+    node: dict,
+    keys: dict[str, list[str] | None],
+    source_type: str,
+    result: ParseResult,
+) -> None:
+    if already_seen(node_id):
+        return
+    base = get_node_item(node, keys["base"])
+    version, vbase, vtype = get_base_version(base)
+    model = get_node_item(node, keys["model"])
+    model = "" if model is None else normalize_model_name(model)
+    domain = get_node_item(node, keys["domain"])
+    if domain is None:
+        domain = ""
+    site = get_node_item(node, keys["site"])
+    if site is None:
+        site = ""
+    if vtype in {"undefined", "foreign"}:
+        result.alien.bases[(version, vbase, vtype)] += 1
+        result.alien.models[model] += 1
+        result.alien.domains[(site, domain)] += 1
+        result.alien.source_type[source_type] += 1
+    else:
+        result.gluon.bases[(version, vbase, vtype)] += 1
+        result.gluon.models[model] += 1
+        result.gluon.domains[(site, domain)] += 1
+        result.gluon.source_type[source_type] += 1
+
+
 def parse_meshviewer(
     data: dict,
+    name: str,
 ) -> ParseResult:
-    global seen, duplicates
-    bases: dict[str, int] = defaultdict(int)
-    models: dict[str, int] = defaultdict(int)
-    domains: dict[str, int] = defaultdict(int)
+    result: ParseResult = ParseResult()
     for node in data["nodes"]:
         try:
             node_id = node["node_id"]
-            if already_seen(node_id):
-                continue
-            base = node["firmware"]["base"]
-            match = VERSION_PATTERN.match(base)
-            if match:
-                bases[match.group("version")] += 1
-            model = normalize_model_name(node["model"])
-            models[model] += 1
-            domain = node["domain"]
-            domains[domain] += 1
         except KeyError:
             continue
-    return ParseResult(bases, models, domains)
+        keys: dict[str, list[str] | None] = {
+            "base": ["firmware", "base"],
+            "model": ["model"],
+            "domain": ["domain"],
+            "site": None,
+        }
+        parse_generic(node_id, node, keys, name, result)
+    return result
 
 
 def parse_nodes_json_v1(
     data: dict,
+    name: str,
 ) -> ParseResult:
-    global seen, duplicates
-    bases: dict[str, int] = defaultdict(int)
+    result: ParseResult = ParseResult()
     for node_id, node in data["nodes"].items():
-        if already_seen(node_id):
-            continue
-        try:
-            base = node["nodeinfo"]["software"]["firmware"]["base"]
-        except KeyError:
-            continue
-        match = VERSION_PATTERN.match(base)
-        if match:
-            bases[match.group("version")] += 1
-    return ParseResult(bases, {}, {})
+        keys: dict[str, list[str] | None] = {
+            "base": ["nodeinfo", "software", "firmware", "base"],
+            "model": None,
+            "domain": None,
+            "site": None,
+        }
+        parse_generic(node_id, node, keys, name, result)
+    return result
 
 
 def parse_nodes_json_v2(
     data: dict,
+    name: str,
 ) -> ParseResult:
-    global seen, duplicates
-    bases: dict[str, int] = defaultdict(int)
-    models: dict[str, int] = defaultdict(int)
-    domains: dict[str, int] = defaultdict(int)
+    result: ParseResult = ParseResult()
     for node in data["nodes"]:
         try:
             node_id = node["nodeinfo"]["node_id"]
-            if already_seen(node_id):
-                continue
-            base = node["nodeinfo"]["software"]["firmware"]["base"]
-            match = VERSION_PATTERN.match(base)
-            if match:
-                bases[match.group("version")] += 1
-            model = normalize_model_name(node["nodeinfo"]["hardware"]["model"])
-            models[model] += 1
-            domain = node["nodeinfo"]["system"]["domain_code"]
-            domains[domain] += 1
         except KeyError:
             continue
-
-    return ParseResult(bases, models, domains)
+        keys: dict[str, list[str] | None] = {
+            "base": ["nodeinfo", "software", "firmware", "base"],
+            "model": ["nodeinfo", "hardware", "model"],
+            "domain": ["nodeinfo", "system", "domain_code"],
+            "site": ["nodeinfo", "system", "site_code"],
+        }
+        parse_generic(node_id, node, keys, name, result)
+    return result
 
 
 register_hook("meshviewer", SCHEMA_MESHVIEWER, parse_meshviewer)
@@ -189,7 +366,7 @@ def load(url: str) -> ParseResult:
         try:
             format_set.schema(data)
             log.msg("Processing", format=name, url=url)
-            return format_set.parser(data)
+            return format_set.parser(data, name)
         except (Invalid, MultipleInvalid):
             pass
 
@@ -210,28 +387,132 @@ def named_load(
     return (community_name, result)
 
 
+def update_gauges(
+    community: str,
+    result: ParseResult,
+    gauges: dict[str, Gauge],
+) -> None:
+    global total_version_sum, total_model_sum, total_domain_sum, total_source_sum
+    global total_alien_sum, total_alien_model_sum, total_alien_domain_sum
+    global total_alien_source_sum
+    for (version, vbase, vtype), version_sum in result.gluon.bases.items():
+        gauges["metric_gluon_version_total"].labels(
+            community=community,
+            version=version,
+            base=vbase,
+            vtype=vtype,
+        ).inc(version_sum)
+        total_version_sum += version_sum
+    for (version, _, vtype), version_sum in result.alien.bases.items():
+        gauges["metric_gluon_alien_total"].labels(
+            community=community,
+            version=version,
+            vtype=vtype,
+        ).inc(version_sum)
+        total_alien_sum += version_sum
+    for model, model_sum in result.gluon.models.items():
+        gauges["metric_gluon_model_total"].labels(community=community, model=model).inc(
+            model_sum,
+        )
+        total_model_sum += model_sum
+    for model, model_sum in result.alien.models.items():
+        gauges["metric_gluon_alien_model_total"].labels(
+            community=community,
+            model=model,
+        ).inc(
+            model_sum,
+        )
+        total_alien_model_sum += model_sum
+    for (site, domain), domain_sum in result.gluon.domains.items():
+        gauges["metric_gluon_domain_total"].labels(
+            community=community,
+            site=site,
+            domain=domain,
+        ).inc(
+            domain_sum,
+        )
+        total_domain_sum += domain_sum
+    for (site, domain), domain_sum in result.alien.domains.items():
+        gauges["metric_gluon_alien_domain_total"].labels(
+            community=community,
+            site=site,
+            domain=domain,
+        ).inc(
+            domain_sum,
+        )
+        total_alien_domain_sum += domain_sum
+    for source, source_sum in result.gluon.source_type.items():
+        gauges["metric_gluon_source_total"].labels(
+            community=community,
+            source_type=source,
+        ).inc(
+            source_sum,
+        )
+        total_source_sum += source_sum
+    for source, source_sum in result.alien.source_type.items():
+        gauges["metric_gluon_alien_source_total"].labels(
+            community=community,
+            source_type=source,
+        ).inc(
+            source_sum,
+        )
+        total_alien_source_sum += source_sum
+
+
+def log_summary() -> None:
+    log.msg(
+        "Collections summaries",
+        version_sum=total_version_sum,
+        model_sum=total_model_sum,
+        domain_sum=total_domain_sum,
+        source_sum=total_source_sum,
+    )
+    log.msg(
+        "Collections summaries, alien",
+        alien_sum=total_alien_sum,
+        alien_model_sum=total_alien_model_sum,
+        alien_domain_sum=total_alien_domain_sum,
+        alien_source_sum=total_alien_source_sum,
+    )
+    log.msg("Summary", unique=len(seen), duplicate=duplicates)
+
+
+def check_node_counts() -> None:
+    if total_version_sum + total_alien_sum != len(seen):
+        log.error(
+            "Node count mismatch",
+            unique=len(seen),
+            version_sum=total_version_sum,
+            alien_sum=total_alien_sum,
+        )
+    if total_model_sum + total_alien_model_sum != len(seen):
+        log.error(
+            "Model count mismatch",
+            unique=len(seen),
+            model_sum=total_model_sum,
+            alien_model_sum=total_alien_model_sum,
+        )
+    if total_domain_sum + total_alien_domain_sum != len(seen):
+        log.error(
+            "Domain count mismatch",
+            unique=len(seen),
+            domain_sum=total_domain_sum,
+            alien_domain_sum=total_alien_domain_sum,
+        )
+    if total_source_sum + total_alien_source_sum != len(seen):
+        log.error(
+            "Source type count mismatch",
+            unique=len(seen),
+            source_sum=total_source_sum,
+            alien_source_sum=total_alien_source_sum,
+        )
+
+
 @click.command(short_help="Collect census information")
 @click.argument("outfile", default="./gluon-census.prom")
 def main(outfile: str) -> None:
     registry = CollectorRegistry()
-    metric_gluon_version_total = Gauge(
-        "gluon_base_total",
-        "Number of unique nodes running on a certain Gluon base version",
-        ["community", "base", "version"],
-        registry=registry,
-    )
-    metric_gluon_model_total = Gauge(
-        "gluon_model_total",
-        "Number of unique nodes using a certain device model",
-        ["community", "model"],
-        registry=registry,
-    )
-    metric_gluon_domain_total = Gauge(
-        "gluon_domain_total",
-        "Number of unique nodes on a specific Gluon domain",
-        ["community", "domain"],
-        registry=registry,
-    )
+    gauges = create_gauges(registry)
 
     with Path("./communities.json").open() as handle:
         communities = json.load(handle)
@@ -248,29 +529,12 @@ def main(outfile: str) -> None:
                 continue
         except TypeError:
             continue
-        for version, version_sum in result.bases.items():
-            match = BASE_PATTERN.match(version)
-            if match is None:
-                msg = "Could not match version"
-                raise ValueError(msg)
-            base = match.group("base")
-            metric_gluon_version_total.labels(
-                community=community,
-                version=version,
-                base=base,
-            ).inc(version_sum)
-        for model, model_sum in result.models.items():
-            metric_gluon_model_total.labels(community=community, model=model).inc(
-                model_sum,
-            )
-        for domain, domain_sum in result.domains.items():
-            metric_gluon_domain_total.labels(community=community, domain=domain).inc(
-                domain_sum,
-            )
+        update_gauges(community, result, gauges)
 
     write_to_textfile(outfile, registry)
 
-    log.msg("Summary", unique=len(seen), duplicate=duplicates)
+    log_summary()
+    check_node_counts()
 
 
 if __name__ == "__main__":
