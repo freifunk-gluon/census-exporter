@@ -21,7 +21,7 @@ dependencies = [
 gluon-census-exporter = "gluon_census_exporter.__main__:main"
 
 [build-system]
-requires = ["uv_build>=0.7.22,<0.10"]
+requires = ["uv_build>=0.7.22,<0.11"]
 build-backend = "uv_build"
 
 [dependency-groups]
