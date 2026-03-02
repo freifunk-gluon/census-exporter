@@ -27,6 +27,9 @@ VERSION_PATTERN = re.compile(r"^(?P<version>gluon-v\d{4}\.\d(?:\.\d)?(?:-\d+)?).
 BASE_PATTERN = re.compile(r"^(?P<base>gluon-v\d{4}\.\d(?:\.\d)?).*")
 
 seen = set()
+total_version_sum = 0
+total_model_sum = 0
+total_domain_sum = 0
 duplicates = 0
 
 
@@ -210,6 +213,7 @@ def named_load(
 @click.command(short_help="Collect census information")
 @click.argument("outfile", default="./gluon-census.prom")
 def main(outfile: str) -> None:
+    global total_version_sum, total_model_sum, total_domain_sum
     registry = CollectorRegistry()
     metric_gluon_version_total = Gauge(
         "gluon_base_total",
@@ -256,17 +260,26 @@ def main(outfile: str) -> None:
                 version=version,
                 base=base,
             ).inc(version_sum)
+            total_version_sum += version_sum
         for model, model_sum in result.models.items():
             metric_gluon_model_total.labels(community=community, model=model).inc(
                 model_sum,
             )
+            total_model_sum += model_sum
         for domain, domain_sum in result.domains.items():
             metric_gluon_domain_total.labels(community=community, domain=domain).inc(
                 domain_sum,
             )
+            total_domain_sum += domain_sum
 
     write_to_textfile(outfile, registry)
 
+    log.msg(
+        "Collections summaries",
+        version_sum=total_version_sum,
+        model_sum=total_model_sum,
+        domain_sum=total_domain_sum,
+    )
     log.msg("Summary", unique=len(seen), duplicate=duplicates)
 
 
