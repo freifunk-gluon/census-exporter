@@ -82,8 +82,11 @@ def test_fixed_main(httpserver: HTTPServer, meshviewer_data: dict) -> None:
             content = p.read()
             for total, amount in (
                 ("gluon_base_total{", 7),
-                ("gluon_model_total{", 110),
-                ("gluon_domain_total{", 21),
+                ("gluon_model_total{", 109),
+                ("gluon_domain_total{", 20),
+                ("gluon_alien_total{", 1),
+                ("gluon_alien_model_total{", 1),
+                ("gluon_alien_domain_total{", 11),
             ):
                 assert content.count(total) == amount
 
