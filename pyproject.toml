@@ -13,7 +13,7 @@ dependencies = [
     "click>=8.4.1",
     "prometheus-client>=0.25.0",
     "requests>=2.34.2",
-    "structlog>=25.4.0",
+    "structlog>=26.1.0",
     "voluptuous>=0.15.2",
 ]
 
