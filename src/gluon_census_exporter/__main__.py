@@ -93,7 +93,7 @@ def get_base_version(pattern: str | None) -> tuple[str, str, str]:
     return (version, vbase, vtype)
 
 
-seen = set()
+seen: set[str] = set()
 total_version_sum = 0
 total_model_sum = 0
 total_domain_sum = 0
