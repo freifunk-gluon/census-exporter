@@ -34,8 +34,10 @@ class PatternDef(TypedDict):
 
 PATTERNS: list[PatternDef] = [
     {
-        "version": re.compile(r"^(?P<version>gluon-v\d{4}\.\d(?:\.\d)?(?:-\d+)?).*"),
-        "base": re.compile(r"^(?P<base>gluon-v\d{4}\.\d(?:\.\d)?).*"),
+        "version": re.compile(
+            r"^(?P<version>gluon-v\d{4}\.\d(?:\.\d)?(?:-rc\d+)?(?:-\d+)?).*",
+        ),
+        "base": re.compile(r"^(?P<base>gluon-v\d{4}\.\d(?:\.\d)?(?:-rc\d+)?).*"),
         "vtype": "gluon-base",
     },
     {
